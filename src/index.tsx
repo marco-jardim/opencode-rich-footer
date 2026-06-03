@@ -248,6 +248,6 @@ const tui: TuiPlugin = async (api) => {
   })
 }
 
-const plugin: TuiPluginModule = { tui }
+const plugin: TuiPluginModule = { id: "opencode-rich-footer", tui }
 export default plugin
 export { tui }
