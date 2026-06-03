@@ -1,6 +1,6 @@
 /** @jsxImportSource @opentui/solid */
 import type { TuiPluginModule, TuiPlugin } from "@opencode-ai/plugin/tui"
-import type { AssistantMessage, Message } from "@opencode-ai/sdk/v2"
+import type { AssistantMessage, Message, Session } from "@opencode-ai/sdk/v2"
 import { createMemo, createSignal, createEffect, onCleanup, Show, type Accessor } from "solid-js"
 import { useTerminalDimensions } from "@opentui/solid"
 
@@ -94,15 +94,14 @@ const tui: TuiPlugin = async (api) => {
           const label = agentMatch ? titlecase(agentMatch[1]) : "Subagent"
           if (!s.parentID) return { label, index: 0, total: 0 }
 
-          // Enumerate sibling sessions to compute position
-          const totalCount = api.state.session.count()
-          const siblings: typeof s[] = []
-          for (let i = 0; i < totalCount; i++) {
-            // api.state.session doesn't expose a direct list; fall back via best-effort
+          // Sibling position. children() may be absent on older hosts → degrade gracefully.
+          const sessionState = api.state.session as typeof api.state.session & {
+            children?: (sessionID: string) => ReadonlyArray<Session>
           }
-          // Without a full session list API, just show "Subagent" without index.
-          // (Upstream may add a sibling enumeration helper later.)
-          return { label, index: 0, total: 0 }
+          const siblings =
+            typeof sessionState.children === "function" ? sessionState.children(s.parentID) : []
+          const idx = siblings.findIndex((x) => x.id === s.id)
+          return { label, index: idx >= 0 ? idx + 1 : 0, total: siblings.length }
         })
 
         const { elapsed: turnElapsed, tps } = useTurnTiming(status, lastAssistant)
