@@ -160,8 +160,14 @@ const tui: TuiPlugin = async (api) => {
         const [hover, setHover] = createSignal<"parent" | "prev" | "next" | null>(null)
         useTerminalDimensions()
 
-        const shortcut = (cmd: string) =>
-          api.keys.formatBindings(api.tuiConfig.keybinds.get(cmd)) ?? ""
+        // @opentui/keymap declares BindingLookup.get() as Binding[] but formatBindings
+        // expects SequenceBindingLike[]; compiled lookup bindings carry `sequence` at
+        // runtime (same composition opencode's own dialog-select uses), so the cast is honest.
+        type SequenceBinding = NonNullable<Parameters<typeof api.keys.formatBindings>[0]>[number]
+        const shortcut = (cmd: string) => {
+          const bindings = api.tuiConfig.keybinds.get(cmd)
+          return api.keys.formatBindings(bindings as ReadonlyArray<(typeof bindings)[number] & SequenceBinding>) ?? ""
+        }
 
         const dispatch = (cmd: string) => api.keymap.dispatchCommand(cmd)
 
