@@ -1,5 +1,5 @@
 /** @jsxImportSource @opentui/solid */
-import { describe, expect, test } from "bun:test"
+import { describe, expect, spyOn, test } from "bun:test"
 import { cp, mkdtemp, mkdir, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -53,6 +53,7 @@ describe("v1 real loader smoke", () => {
       await cp(path.join(root, "tui.js"), path.join(temporary, "tui.js"))
       // The runner stages either the real build or its coverage-instrumented equivalent.
       await cp(fileURLToPath(new URL("../src", import.meta.url)), path.join(temporary, "dist"), { recursive: true })
+      await writeFile(path.join(temporary, "dist/adapters/v2.js"), 'throw new Error("inactive v2 adapter was imported")\n')
       const runtimeID = (specifier: string) => `opentui:runtime-module:${encodeURIComponent(specifier)}`
       await writeFile(path.join(temporary, "probe.js"), [
         `export { createSignal as probeSignal } from ${JSON.stringify(runtimeID("solid-js"))};`,
@@ -85,7 +86,7 @@ describe("v1 real loader smoke", () => {
         expect(mod.probeRGBA).toBe(RGBA)
         const probeJSX = mod.probeJSX as typeof jsxRuntime
         for (const key of Object.keys(jsxRuntime) as (keyof typeof jsxRuntime)[]) expect(probeJSX[key]).toBe(jsxRuntime[key])
-        const plugin = shared.readV1Plugin(mod, spec, "tui")
+        let plugin = shared.readV1Plugin(mod, spec, "tui")
         expect(plugin.id).toBe("opencode-rich-footer")
         const [id, setID] = createSignal("child")
         const [messages, setMessages] = createSignal<readonly Message[]>([answer(0.2)])
@@ -97,7 +98,7 @@ describe("v1 real loader smoke", () => {
         // Synthetic data/services only; the registry and bound slot are the host's OpenTUI APIs.
         const source: V1SourceApi = {
           client: {},
-          state: { provider: [], path: { state: "state", config: "config", directory: "D:/smoke", worktree: "D:/smoke" }, part: () => [], session: { get: (key) => sessions.find((entry) => entry.id === key), messages, status: () => ({ type: "idle" }), children: () => sessions.filter((entry) => entry.parentID) } },
+          state: { provider: [], path: { state: "state", config: "config", directory: "D:/smoke", worktree: "D:/smoke" }, part: () => [], session: { get: (key) => sessions.find((entry) => entry.id === key), messages, status: () => ({ type: "busy" }), children: () => sessions.filter((entry) => entry.parentID) } },
           theme: { get current() { return { text: color(), textMuted: color(), border: color(), backgroundPanel: RGBA.fromHex("#111111"), backgroundElement: RGBA.fromHex("#222222") } as Api["theme"]["current"] } },
           keys: { formatBindings: () => "P" }, tuiConfig: { keybinds: { get: () => [] } },
           keymap: { dispatchCommand: (command) => { commands.push(`${id()}:${command}`); return { ok: true } } },
@@ -112,8 +113,24 @@ describe("v1 real loader smoke", () => {
           return <box><input focused onInput={setInput} /><Slot name="session_footer" session_id={id()} /></box>
         }
         const setup = await testRender(() => <App />, { width: 80, height: 12 })
+        const intervals = spyOn(globalThis, "setInterval")
+        const clears = spyOn(globalThis, "clearInterval")
         try {
           for (let cycle = 0; cycle < 10; cycle++) {
+            // v1 has no graph hot-reloader. A fresh local installation path forces
+            // its real loader to evaluate the entire graph, like a fresh process.
+            const generation = path.join(temporary, `generation-${cycles}`)
+            await mkdir(generation)
+            for (const file of ["package.json", "tui.js", "probe.js", "dist"]) await cp(path.join(temporary, file), path.join(generation, file), { recursive: true })
+            const discovered = await loaderModule.PluginLoader.resolve({ spec: spec.startsWith("file:") ? pathToFileURL(generation).href : generation, deprecated: false, options: undefined }, "tui")
+            if (!discovered.ok) throw new Error(`Reload discovery failed: ${discovered.stage}`)
+            const reloaded = await loaderModule.PluginLoader.load(discovered.value)
+            if (!reloaded.ok) throw reloaded.error
+            expect(reloaded.value.mod.probeSignal).toBe(createSignal)
+            expect(reloaded.value.mod.probeComponent).toBe(createComponent)
+            const previous = plugin
+            plugin = shared.readV1Plugin(reloaded.value.mod, discovered.value.spec, "tui")
+            expect(plugin.tui).not.toBe(previous.tui)
             await plugin.tui(api, undefined, {
               id: plugin.id, spec, source: "file", target: resolution.value.target,
               first_time: 1, last_time: cycle + 1, time_changed: 1,
@@ -144,10 +161,18 @@ describe("v1 real loader smoke", () => {
             setID("parent")
             await setup.renderOnce()
             expect(setup.captureCharFrame()).not.toContain("Parent")
+            setID("child")
+            await setup.renderOnce()
             unregister?.()
             await setup.renderOnce()
             expect(setup.captureCharFrame()).not.toContain("response")
             expect(setup.renderer.keyInput.listenerCount("keypress")).toBe(count)
+            const timerHandles = intervals.mock.calls.flatMap(([callback], index) => {
+              const result = intervals.mock.results[index]
+              return typeof callback === "function" && callback.name === "tickFooter" && result?.type === "return" ? [result.value] : []
+            })
+            expect(timerHandles.length).toBeGreaterThan(cycle)
+            for (const handle of timerHandles) expect(clears.mock.calls.map(([cleared]) => cleared)).toContain(handle)
             setID("child")
             setMessages([answer(0.2)])
             cycles++
@@ -156,6 +181,8 @@ describe("v1 real loader smoke", () => {
           controller.abort()
           unregister?.()
           setup.renderer.destroy()
+          intervals.mockRestore()
+          clears.mockRestore()
         }
       }
       expect(cycles).toBe(20)

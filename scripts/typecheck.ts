@@ -16,6 +16,7 @@ for (const generation of ["v1", "v2"] as const) {
     "solid-js/*": [path.join(modules, "solid-js/*")],
     "@opentui/core": [path.join(modules, "@opentui/core/index.d.ts")],
     "@opentui/core/*": [path.join(modules, "@opentui/core/*")],
+    "@opentui/keymap": [path.join(modules, "@opentui/keymap")],
     "@opentui/solid": [path.join(modules, "@opentui/solid/index.d.ts")],
     "@opentui/solid/*": [path.join(modules, "@opentui/solid/*")],
     "@opencode-ai/plugin/tui": [path.join(views.v1, "packages/plugin/src/tui.ts")],

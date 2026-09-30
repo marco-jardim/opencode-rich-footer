@@ -1,5 +1,5 @@
 /** @jsxImportSource @opentui/solid */
-import { describe, expect, test } from "bun:test"
+import { describe, expect, spyOn, test } from "bun:test"
 import { cp, mkdtemp, mkdir, readFile, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -57,12 +57,16 @@ describe("v2 real loader smoke", () => {
     const host = await import(pathToFileURL(path.join(hostRoot, "packages/plugin/src/host.ts")).href) as Host
     const factory = await import(pathToFileURL(path.join(hostRoot, "packages/tui/src/plugin/api.tsx")).href) as ContextFactory
     const structure = await import(pathToFileURL(path.join(hostRoot, "packages/tui/src/plugin/structure.ts")).href) as Structure
+    const sourceModule = await import(pathToFileURL(path.join(hostRoot, "packages/plugin/src/source.ts")).href) as {
+      createPluginSources(watch: (file: string) => Promise<void>): { read(entry: string): Promise<{ version: string; module: unknown }>; dispose(): void }
+    }
     const temporaryRoot = await realpath(tmpdir())
     const temporary = await realpath(await mkdtemp(path.join(temporaryRoot, "rich footer v2 ação 日本 ")))
     try {
       await cp(path.join(root, "package.json"), path.join(temporary, "package.json"))
       await cp(path.join(root, "tui.js"), path.join(temporary, "tui.js"))
       await cp(fileURLToPath(new URL("../src", import.meta.url)), path.join(temporary, "dist"), { recursive: true })
+      await writeFile(path.join(temporary, "dist/adapters/v1.js"), 'throw new Error("inactive v1 adapter was imported")\n')
       const runtimeID = (specifier: string) => `opentui:runtime-module:${encodeURIComponent(specifier)}`
       await writeFile(path.join(temporary, "probe.js"), [
         `export { createSignal as probeSignal } from ${JSON.stringify(runtimeID("solid-js"))};`,
@@ -88,7 +92,7 @@ describe("v2 real loader smoke", () => {
         const entry = host.resolve({ directory }).tui
         if (!entry) throw new Error(`Host did not discover a TUI entry for ${spec}`)
         expect(await realpath(fileURLToPath(entry.startsWith("file:") ? entry : pathToFileURL(entry)))).toBe(await realpath(path.join(temporary, "tui.js")))
-        const mod = await host.load(entry) as { default: Plugin.Definition; probeSignal: unknown; probeStore: unknown; probeComponent: unknown; probeRGBA: unknown; probeJSX: typeof jsxRuntime }
+        let mod = await host.load(entry) as { default: Plugin.Definition; probeSignal: unknown; probeStore: unknown; probeComponent: unknown; probeRGBA: unknown; probeJSX: typeof jsxRuntime; revision?: number }
         expect(mod.default.id).toBe("opencode-rich-footer")
         expect(mod.probeSignal).toBe(createSignal)
         expect(mod.probeStore).toBe(createStore)
@@ -110,7 +114,7 @@ describe("v2 real loader smoke", () => {
           client: { session: { list: async (request) => ({ data: sessions().filter((item) => item.parentID === request?.parentID), cursor: {} }) } },
           data: {
             listen(listener) { listeners.add(listener); return () => { listeners.delete(listener) } },
-            session: { get: (key) => sessions().find((item) => item.id === key), list: sessions, status: () => "idle", sync: async () => {}, message: { list: messages, sync: async () => {} } },
+            session: { get: (key) => sessions().find((item) => item.id === key), list: sessions, status: () => "running", sync: async () => {}, message: { list: messages, sync: async () => {} } },
             location: { default: () => ({ directory: "D:/smoke" }), model: { list: () => [], sync: async () => {} } },
           },
           keymap: { shortcuts: () => ["Alt"], layer(layer) { layers.add(layer); onCleanup(() => { layers.delete(layer) }) } },
@@ -134,9 +138,22 @@ describe("v2 real loader smoke", () => {
           return <For each={resolved().slotted.get("session.composer.top")?.append ?? []}>{(claim) => createSolidComponent(claim.render, { get sessionID() { return id() } })}</For>
         }
         const setup = await testRender(() => <box><input focused onInput={setInput} /><HostSlot /></box>, { width: 80, height: 12 })
+        const sources = sourceModule.createPluginSources(async () => {})
+        const probe = await readFile(path.join(temporary, "probe.js"), "utf8")
+        const intervals = spyOn(globalThis, "setInterval")
+        const clears = spyOn(globalThis, "clearInterval")
         let cleanup: Plugin.Cleanup | void = undefined
         try {
           for (let cycle = 0; cycle < 10; cycle++) {
+            await writeFile(path.join(temporary, "probe.js"), probe.replace(/\nexport const revision = \d+;\n/g, "\n") + `\nexport const revision = ${cycles};\n`)
+            const previous = mod
+            const reloaded = await sources.read(entry.startsWith("file:") ? entry : pathToFileURL(entry).href)
+            mod = reloaded.module as typeof mod
+            expect(mod.revision).toBe(cycles)
+            expect(mod.default.setup).not.toBe(previous.default.setup)
+            expect(mod.probeSignal).toBe(createSignal)
+            expect(mod.probeStore).toBe(createStore)
+            expect(mod.probeComponent).toBe(createComponent)
             cleanup = await mod.default.setup(context)
             expect(claims()).toHaveLength(1)
             expect(claims()[0].placement).toEqual({ kind: "append", target: "session.composer.top" })
@@ -173,12 +190,23 @@ describe("v2 real loader smoke", () => {
             expect(setup.captureCharFrame()).not.toContain("Parent")
             expect(listeners.size).toBe(0)
             expect(layers.size).toBe(0)
+            setID("a")
+            await flush()
+            await setup.renderOnce()
             await cleanup?.()
             cleanup = undefined
             await setup.renderOnce()
             expect(claims()).toHaveLength(0)
             expect(setup.captureCharFrame()).not.toContain("response")
             expect(setup.renderer.keyInput.listenerCount("keypress")).toBe(count)
+            expect(listeners.size).toBe(0)
+            expect(layers.size).toBe(0)
+            const timerHandles = intervals.mock.calls.flatMap(([callback], index) => {
+              const result = intervals.mock.results[index]
+              return typeof callback === "function" && callback.name === "tickFooter" && result?.type === "return" ? [result.value] : []
+            })
+            expect(timerHandles.length).toBeGreaterThan(cycle)
+            for (const handle of timerHandles) expect(clears.mock.calls.map(([cleared]) => cleared)).toContain(handle)
             setID("a")
             setSessions([session("parent"), session("a", "parent"), session("b", "parent", 2)])
             setMessages([answer(0.2)])
@@ -188,6 +216,9 @@ describe("v2 real loader smoke", () => {
           await cleanup?.()
           for (const dispose of owned) await dispose()
           setup.renderer.destroy()
+          sources.dispose()
+          intervals.mockRestore()
+          clears.mockRestore()
         }
       }
       expect(cycles).toBe(20)
