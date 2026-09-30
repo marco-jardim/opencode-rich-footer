@@ -27,7 +27,7 @@ for (const generation of ["v1", "v2"] as const) {
   await writeFile(config, JSON.stringify({
     extends: "../tsconfig.json",
     compilerOptions: { noEmit: true, preserveSymlinks: true, paths, baseUrl: root },
-    include: ["../src", "../tests", "../scripts"], exclude: process.argv.includes("--unit") ? ["../tests/*-loader.test.tsx"] : [],
+    include: ["../src", "../tests", "../scripts"], exclude: process.argv.includes("--unit") ? ["../tests/*-*.test.tsx"] : [],
   }, null, 2))
   const result = Bun.spawnSync([process.execPath, path.join(root, "node_modules/typescript/bin/tsc"), "-p", config], { cwd: root, stdout: "inherit", stderr: "inherit" })
   if (result.exitCode) process.exit(result.exitCode)

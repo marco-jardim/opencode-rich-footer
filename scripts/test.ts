@@ -19,7 +19,7 @@ for (const generation of ["v1", "v2"] as const) {
   await mkdir(staging, { recursive: true })
   await cp(path.join(root, coverage ? ".cache/instrumented" : "dist"), path.join(staging, "src"), { recursive: true })
   await mkdir(path.join(staging, "tests"), { recursive: true })
-  const files = (await readdir(path.join(root, "tests"))).filter((file) => /\.test\.tsx?$/.test(file) && !file.startsWith(generation === "v1" ? "v2" : "v1") && (!process.argv.includes("--unit") || !file.includes("-loader.")))
+  const files = (await readdir(path.join(root, "tests"))).filter((file) => /\.test\.tsx?$/.test(file) && !file.startsWith(generation === "v1" ? "v2" : "v1") && (!process.argv.includes("--unit") || !file.includes("-")))
   for (const file of files) await cp(path.join(root, "tests", file), path.join(staging, "tests", file))
   const runtime = path.join(host.root, host.runtime)
   const support = Bun.resolveSync("@opentui/solid/runtime-plugin-support/configure", runtime)

@@ -163,12 +163,12 @@ export function createV2Source(context: V2Context, sessionID: Read<string>, diag
         const seen = new Set<string>()
         let cursor: string | undefined
         for (let page = 0; page < 64; page++) {
-          const response = await context.client.session.list({ parentID, order: "asc", cursor, directory: ref.directory })
+          const response = await context.client.session.list({ parentID, order: "asc", cursor })
           if (!valid()) return
-          result.push(...response.data.filter((entry) => entry.parentID === parentID))
+          result.push(...response.data.filter((entry) => entry.parentID === parentID && !deleted().has(entry.id)))
           const nextCursor = response.cursor.next ?? undefined
           if (!nextCursor) {
-            setChildren(result)
+            setChildren(result.filter((entry) => !deleted().has(entry.id)))
             setChildrenKey(generation)
             return
           }
@@ -196,21 +196,22 @@ export function createV2Source(context: V2Context, sessionID: Read<string>, diag
       if (!valid()) return
       if (details.type === "session.deleted") {
         const deletedID = details.data.sessionID
-        if (deletedID !== id && deletedID !== parentID && !children()?.some((entry) => entry.id === deletedID) && context.data.session.get(deletedID)?.parentID !== parentID) return
+        const known = deletedID === id || deletedID === parentID || children()?.some((entry) => entry.id === deletedID) || context.data.session.get(deletedID)?.parentID === parentID
+        // An in-flight page may contain a deleted session that is not cached yet.
         setDeleted((value) => new Set([...value, deletedID]))
         setChildren((value) => value?.filter((entry) => entry.id !== details.data.sessionID))
-        void refresh()
+        if (known) void refresh()
         return
       }
       if (details.type === "session.created" && details.data.parentID === parentID) void refresh()
-      if (details.type === "session.moved" && children()?.some((entry) => entry.id === details.data.sessionID)) void refresh()
+      if (details.type === "session.moved" && (refreshing || children()?.some((entry) => entry.id === details.data.sessionID) || context.data.session.get(details.data.sessionID)?.parentID === parentID)) void refresh()
     })
     context.keymap.layer(() => ({
       enabled: active,
       commands: [
-        { id: commands.parent, title: "Open parent session", bind: "alt+shift+up", palette: true, enabled: parent.enabled, run: parent.run },
-        { id: commands.previous, title: "Previous sibling session", bind: "alt+shift+left", palette: true, enabled: previous.enabled, run: previous.run },
-        { id: commands.next, title: "Next sibling session", bind: "alt+shift+right", palette: true, enabled: next.enabled, run: next.run },
+        { id: commands.parent, title: "Open parent session", bind: false, palette: true, enabled: parent.enabled, run: parent.run },
+        { id: commands.previous, title: "Previous sibling session", bind: false, palette: true, enabled: previous.enabled, run: previous.run },
+        { id: commands.next, title: "Next sibling session", bind: false, palette: true, enabled: next.enabled, run: next.run },
       ],
     }))
     onCleanup(() => { disposed = true; off() })

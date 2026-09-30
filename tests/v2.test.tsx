@@ -22,6 +22,16 @@ function deferred<T>() {
   const promise = new Promise<T>((done, fail) => { resolve = done; reject = fail })
   return { promise, resolve, reject }
 }
+type Event = Parameters<Parameters<V2Context["data"]["listen"]>[0]>[0]["details"]
+function deletedEvent(sessionID: string): Event {
+  return { id: `deleted-${sessionID}`, type: "session.deleted", created: 1, durable: { aggregateID: sessionID, seq: 1, version: 2 }, data: { sessionID } }
+}
+function createdEvent(sessionID: string, parentID = "parent"): Event {
+  return { id: `created-${sessionID}`, type: "session.created", created: 1, durable: { aggregateID: sessionID, seq: 1, version: 1 }, data: { sessionID, parentID, projectID: "project", location: { directory: "D:/project" }, slug: sessionID, version: "2.0.20" } }
+}
+function movedEvent(sessionID: string): Event {
+  return { id: `moved-${sessionID}`, type: "session.moved", created: 1, durable: { aggregateID: sessionID, seq: 1, version: 1 }, data: { sessionID, projectID: "project", location: { directory: "D:/moved" } } }
+}
 
 function fixture(initial: SessionInfo[] = [session("parent"), session("a", "parent"), session("b", "parent", 2)]) {
   const [sessions, setSessions] = createSignal(initial)
@@ -36,6 +46,7 @@ function fixture(initial: SessionInfo[] = [session("parent"), session("a", "pare
   let list: V2Context["client"]["session"]["list"] = async (input) => ({ data: sessions().filter((entry) => entry.parentID === input?.parentID), cursor: {} })
   let sessionSync = async (sessionID: string) => { calls.push(`session:${sessionID}`) }
   let modelSync = async (directory: string) => { calls.push(`models:${directory}`) }
+  let modelList: V2Context["data"]["location"]["model"]["list"] = () => models()
   const color = RGBA.fromHex("#eeeeee")
   const context: V2Context = {
     location: { directory: "D:/fallback" },
@@ -49,11 +60,11 @@ function fixture(initial: SessionInfo[] = [session("parent"), session("a", "pare
         sync: (sessionID) => sessionSync(sessionID),
         message: { list: () => messages(), sync: async (sessionID) => { calls.push(`messages:${sessionID}`) } },
       },
-      location: { default: () => ({ directory: "D:/fallback" }), model: { list: () => models(), sync: async (ref) => modelSync(ref?.directory ?? "") } },
+      location: { default: () => ({ directory: "D:/fallback" }), model: { list: (ref) => modelList(ref), sync: async (ref) => modelSync(ref?.directory ?? "") } },
     },
     ui: { router: { current: () => ({ type: "session", sessionID: id() }), navigate: (target) => { if (target.type === "session") destinations.push(target.sessionID) } } },
     keymap: {
-      shortcuts: () => ["Alt+Shift+Left"],
+      shortcuts: () => [],
       layer(input) { layers.add(input); onCleanup(() => { layers.delete(input) }) },
     },
     theme: { text: { base: color, muted: color }, border: { base: color }, background: { raised: { base: color, high: color } } },
@@ -66,6 +77,7 @@ function fixture(initial: SessionInfo[] = [session("parent"), session("a", "pare
     emit(details: Parameters<Parameters<V2Context["data"]["listen"]>[0]>[0]["details"]) { for (const listener of listeners) listener({ details }) },
     setSessionSync(value: typeof sessionSync) { sessionSync = value },
     setModelSync(value: typeof modelSync) { modelSync = value },
+    setModelList(value: typeof modelList) { modelList = value },
   }
 }
 
@@ -100,13 +112,22 @@ describe("direct sibling navigation", () => {
   test("creation ties sort by ID regardless of update/list order", () => {
     expect(siblingTarget(a, [b, a], 1)).toEqual(b)
     expect(siblingTarget(b, [b, a], -1)).toEqual(a)
-    expect(siblingTarget(a, [a, b], -1)).toBeUndefined()
-    expect(siblingTarget(b, [a, b], 1)).toBeUndefined()
+    expect(siblingTarget(a, [a, b], -1)).toEqual(b)
+    expect(siblingTarget(b, [a, b], 1)).toEqual(a)
   })
   test("removed or missing current session cannot select a neighbor", () => {
     expect(siblingTarget(a, [b], 1)).toBeUndefined()
     expect(siblingTarget(undefined, [a, b], -1)).toBeUndefined()
     expect(siblingTarget(a, undefined, 1)).toBeUndefined()
+    expect(siblingTarget(a, [], 1)).toBeUndefined()
+    expect(siblingTarget(a, [a], 1)).toBeUndefined()
+    expect(siblingTarget(a, [a, a], -1)).toBeUndefined()
+    expect(siblingTarget(root, [a, b], 1)).toBeUndefined()
+  })
+  test("unknown creation dates sort before known dates and duplicate IDs count once", () => {
+    const unknown = { id: "unknown", parentID: "root" }
+    expect(directSiblings(a, [b, a, b, unknown])).toEqual([unknown, a, b])
+    expect(siblingTarget(unknown, [b, a, unknown, b], -1)).toEqual(b)
   })
 })
 
@@ -184,16 +205,78 @@ describe("v2 source lifecycle", () => {
     expect(f.destinations).toEqual(["b"])
     f.dispose()
   })
+  test("siblings in different directories are fetched by parent without a location filter", async () => {
+    const a = { ...session("a", "parent"), location: { directory: "D:/one" } }
+    const b = { ...session("b", "parent", 2), location: { directory: "D:/two" } }
+    const f = fixture([session("parent")])
+    f.setSessions([session("parent"), a])
+    f.setList(async (input) => ({ data: [a, b].filter((entry) => entry.parentID === input?.parentID && (!input?.directory || entry.location.directory === input.directory)), cursor: {} }))
+    f.setID("a")
+    await flush()
+    expect(f.source.siblings()?.map((entry) => entry.id)).toEqual(["a", "b"])
+    f.source.previous.run()
+    expect(f.destinations).toEqual(["b"])
+    expect(f.calls).toContain("models:D:/one")
+    f.dispose()
+  })
+  test("a deletion during the first pending page tombstones an uncached sibling", async () => {
+    const f = fixture([session("parent")])
+    const pending = deferred<SessionsResponse>()
+    f.setSessions([session("parent"), session("a", "parent")])
+    f.setList(() => pending.promise)
+    f.setID("a")
+    await flush()
+    expect(f.source.siblings()).toBeUndefined()
+    f.emit(deletedEvent("b"))
+    pending.resolve({ data: [session("a", "parent"), session("b", "parent", 2)], cursor: {} })
+    await flush()
+    expect(f.source.siblings()?.map((entry) => entry.id)).toEqual(["a"])
+    expect(f.source.next.enabled()).toBe(false)
+    f.source.next.run()
+    expect(f.destinations).toEqual([])
+    expect(f.calls.filter((call) => call.startsWith("children:")).length).toBe(1)
+    f.dispose()
+  })
+  test("created and moved events during a pending page coalesce into one additional refresh", async () => {
+    const f = fixture([session("parent")])
+    const pending = deferred<SessionsResponse>()
+    let requests = 0
+    f.setSessions([session("parent"), session("a", "parent")])
+    f.setList(() => ++requests === 1 ? pending.promise : Promise.resolve({ data: [session("a", "parent"), session("b", "parent", 2)], cursor: {} }))
+    f.setID("a")
+    await flush()
+    f.emit(createdEvent("b"))
+    f.emit(movedEvent("b"))
+    f.emit(createdEvent("c"))
+    f.emit(movedEvent("c"))
+    expect(requests).toBe(1)
+    pending.resolve({ data: [session("a", "parent")], cursor: {} })
+    await flush()
+    expect(requests).toBe(2)
+    expect(f.source.siblings()?.map((entry) => entry.id)).toEqual(["a", "b"])
+    expect(f.diagnostics).toEqual([])
+    f.dispose()
+  })
+  test("unrelated events do not refresh a settled sibling list", async () => {
+    const f = fixture()
+    await flush()
+    const requests = f.calls.filter((call) => call.startsWith("children:")).length
+    f.emit(createdEvent("outsider", "another-parent"))
+    f.emit(movedEvent("outsider"))
+    f.emit(deletedEvent("outsider"))
+    await flush()
+    expect(f.calls.filter((call) => call.startsWith("children:")).length).toBe(requests)
+    f.dispose()
+  })
   test("deletion disables stale targets even before the host cache catches up", async () => {
     const f = fixture()
     await flush()
-    const event = (sessionID: string): Parameters<Parameters<V2Context["data"]["listen"]>[0]>[0]["details"] => ({ id: `deleted-${sessionID}`, type: "session.deleted", created: 1, durable: { aggregateID: sessionID, seq: 1, version: 2 }, data: { sessionID } })
-    f.emit(event("b"))
+    f.emit(deletedEvent("b"))
     await flush()
     expect(f.source.siblings()?.map((entry) => entry.id)).toEqual(["a"])
     f.source.next.run()
     expect(f.destinations).toEqual([])
-    f.emit(event("parent"))
+    f.emit(deletedEvent("parent"))
     f.source.parent.run()
     expect(f.destinations).toEqual([])
     f.dispose()
@@ -202,7 +285,9 @@ describe("v2 source lifecycle", () => {
     const f = fixture()
     await flush()
     const commands = [...f.layers][0]?.().commands ?? []
-    expect(commands.map((entry) => entry.bind)).toEqual(["alt+shift+up", "alt+shift+left", "alt+shift+right"])
+    expect(commands.map((entry) => entry.bind)).toEqual([false, false, false])
+    expect(commands.every((entry) => entry.palette === true)).toBe(true)
+    expect(f.source.previous.shortcut()).toBeUndefined()
     const next = commands.find((entry) => entry.id === "opencode-rich-footer.next")
     f.dispose()
     next?.run()
@@ -249,6 +334,50 @@ describe("v2 source lifecycle", () => {
     expect(f.source.siblings()?.map((entry) => entry.id)).toEqual(["c"])
     expect(f.diagnostics).toEqual([])
     f.dispose()
+  })
+  for (const completion of ["resolve", "reject"] as const) {
+    test(`late child-sync ${completion} after a location change cannot publish or diagnose`, async () => {
+      const f = fixture([session("parent")])
+      const old = deferred<SessionsResponse>()
+      let requests = 0
+      f.setSessions([session("parent"), { ...session("a", "parent"), location: { directory: "D:/one" } }])
+      f.setList(() => ++requests === 1 ? old.promise : Promise.resolve({ data: [session("a", "parent"), session("new", "parent", 2)], cursor: {} }))
+      f.setModelList((ref) => [model("provider", ref?.directory === "D:/one" ? 1000 : 2000)])
+      f.setID("a")
+      await flush()
+      const oldKey = f.source.key()
+      expect(f.source.contextLimit({ providerID: "provider", modelID: "model" })).toBe(1000)
+      f.setSessions([session("parent"), { ...session("a", "parent"), location: { directory: "D:/two" } }])
+      await flush()
+      expect(f.source.key()).not.toBe(oldKey)
+      expect(f.source.contextLimit({ providerID: "provider", modelID: "model" })).toBe(2000)
+      if (completion === "resolve") old.resolve({ data: [session("obsolete", "parent")], cursor: {} })
+      else old.reject(new Error("obsolete location"))
+      await flush()
+      expect(f.source.siblings()?.map((entry) => entry.id)).toEqual(["a", "new"])
+      expect(f.calls).toContain("models:D:/two")
+      expect(f.diagnostics).toEqual([])
+      expect(f.listeners.size).toBe(1)
+      expect(f.layers.size).toBe(1)
+      f.dispose()
+    })
+  }
+  test("a successful child-sync response after cleanup cannot publish or navigate", async () => {
+    const f = fixture([session("parent")])
+    const pending = deferred<SessionsResponse>()
+    f.setSessions([session("parent"), session("a", "parent")])
+    f.setList(() => pending.promise)
+    f.setID("a")
+    await flush()
+    f.dispose()
+    pending.resolve({ data: [session("a", "parent"), session("b", "parent", 2)], cursor: {} })
+    await flush()
+    expect(f.source.siblings()).toBeUndefined()
+    f.source.next.run()
+    expect(f.destinations).toEqual([])
+    expect(f.diagnostics).toEqual([])
+    expect(f.listeners.size).toBe(0)
+    expect(f.layers.size).toBe(0)
   })
   test("late responses and rejection after cleanup cannot publish or diagnose", async () => {
     const f = fixture([session("parent")])
