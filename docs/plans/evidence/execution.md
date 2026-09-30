@@ -8,11 +8,11 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 
 | Unidade | Estado |
 | --- | --- |
-| P1.PF coleta | in_progress |
-| P1.PF avaliação heavy | pending |
-| P1.T1 núcleo | pending |
-| P1.T2 adaptadores/UI | pending |
-| P1.T3 build/carregamento | pending |
+| P1.PF coleta | completed |
+| P1.PF avaliação heavy | completed (PASS Bun v1/v2) |
+| P1.T1 núcleo | in_progress |
+| P1.T2 adaptadores/UI | in_progress |
+| P1.T3 build/carregamento | in_progress |
 | P1.TEST / P1.QA | pending |
 | P2 | pending |
 | Global | pending |
@@ -26,11 +26,25 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 ## Registro de locks
 
 - root: WRITE exclusivo em docs/plans/evidence e metadados Git deste workspace.
-- v1_preflight, v2_preflight: READ em refs imutáveis e dependências dos hosts; zero escrita.
-- Fontes existentes do plugin: congeladas no commit baseline até aprovação do pre-flight.
+- v1_preflight, v2_preflight: leituras concluídas; locks liberados.
+- Contrato C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\contracts.ts congelado para leitura compartilhada.
+- root: WRITE exclusivo em núcleo, entradas, build/configuração e testes correspondentes; integração Git/dependências exclusiva.
+- owner V1: WRITE exclusivo em C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\adapters\v1.tsx e C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v1.test.tsx.
+- owner V2: WRITE exclusivo em C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\adapters\v2.tsx, C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\navigation.ts e C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v2.test.tsx.
+- owner UI: WRITE exclusivo em C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\footer.tsx e C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\footer.test.tsx.
+- Nenhum agente pode ler um arquivo sob WRITE de outro. Testes integrados/build somente após handoff de todos os owners envolvidos.
 
 ## Evidência inicial
 
 - bun 1.3.14; Node v24.21.0.
 - Git status inspecionado nos três checkouts antes de editar.
 - Nenhum gate de implementação aprovado ainda.
+
+## Implementação P1 — checkpoint
+
+- Núcleo, adaptadores e UI implementados. Build ESM usa IDs virtuais canônicos OpenTUI, aprovados pelo heavy após bare imports falharem em JavaScript compilado no Bun v1. Transformação AST após JSX, imports tardios por geração e guard Node antes de UI.
+- Runtime real confirmado: v1 OpenTUI 0.4.5 + Solid 1.9.10 patched; v2 OpenTUI 0.5.12 + Solid 1.9.15 patched (corrige anotação inicial de versão v2).
+- Typecheck de produção, scripts e testes unitários passou nas duas matrizes.
+- Tests unitários + renderer real: v1 26 pass / 154 expects; v2 36 pass / 169 expects; zero fail/skip.
+- Cobertura inicial remapeada por sourcemaps: 93.62% linhas, 87.53% branches. Loaders e testes adversariais de fim de fase ainda pendentes; isto não é aprovação P1.
+- Smoke loader inicial expôs erros na fixture (cópia Windows de junction e assinatura de setup); corrigidos pelo owner e em nova execução. Não houve alteração de host.
