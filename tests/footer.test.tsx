@@ -123,6 +123,15 @@ test("theme and hover colors follow current semantic tokens", async () => {
     await setup.renderOnce()
     const unhovered = setup.captureSpans().lines.flatMap((line) => line.spans).find((span) => span.text.includes("Parent"))
     expect(unhovered?.bg.equals(RGBA.fromHex("#222222"))).toBe(true)
+    data.setTheme({ text: "#202020", textMuted: "#555555", border: "#bbbbbb", backgroundPanel: "#fafafa", backgroundElement: "#eeeeee" })
+    await setup.renderOnce()
+    const light = setup.captureSpans().lines.flatMap((line) => line.spans).find((span) => span.text.includes("Parent"))
+    expect(light?.fg.equals(RGBA.fromHex("#202020"))).toBe(true)
+    expect(light?.bg.equals(RGBA.fromHex("#fafafa"))).toBe(true)
+    await setup.mockMouse.moveTo(parent.x, parent.y)
+    await setup.renderOnce()
+    const lightHovered = setup.captureSpans().lines.flatMap((line) => line.spans).find((span) => span.text.includes("Parent"))
+    expect(lightHovered?.bg.equals(RGBA.fromHex("#eeeeee"))).toBe(true)
   } finally {
     setup.renderer.destroy()
   }

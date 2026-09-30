@@ -4,8 +4,8 @@ Executados independentemente pelo orquestrador, após as correções P1-QA-01–
 
 Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Scripts: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\test.ts e C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\typecheck.ts.
 
-- `bun scripts/typecheck.ts`: PASS v1 e v2, produção/scripts/testes incluídos.
-- `bun scripts/test.ts --coverage`: PASS, zero falhas/skip. V1: 30 testes e 926 expects. V2: 50 testes e 1705 expects.
+- `bun run typecheck`: PASS v1 e v2, produção/scripts/testes incluídos.
+- `bun run test:coverage`: PASS, zero falhas/skip. V1: 31 testes e 933 expects. V2: 51 testes e 1712 expects.
 - Build ESM regular e instrumentado passaram. Cobertura Istanbul remapeada para fontes originais via sourcemaps; inicializa também arquivos não carregados, sem excluir UI/adaptadores.
 
 | Fonte sob C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer | Linhas | Branches |
@@ -28,5 +28,9 @@ Relatório regenerável: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-
 - Irmãos de diretórios diferentes, exclusão de irmão desconhecido durante primeira página, coalescing de eventos created/moved, mudanças de localização, respostas e rejeições tardias, wrap e deduplicação.
 - 20 avaliações completas pelo loader v1 e 20 reloads reais pelo source loader v2, sessões running, geração inativa armada para falhar caso importada; contagens de timers/listeners/slots/comandos retornam ao baseline.
 - Processo Node real verifica diagnóstico antes de importar UI. Testes não afirmam suporte Node operacional.
+- Cache sem input novo: 30 reads + 70 writes produz 30%; apenas reads produz 100%. Renderer muda de tema escuro para claro, inclusive hover, preservando tokens semânticos.
+- Smokes concorrentes em processos Bun separados, sem rebuild ou troca de junction: v1 iniciou 23:45:30.188Z e terminou 23:45:54.629Z; v2 iniciou 23:45:32.200Z e terminou 23:45:39.681Z em 30/09/2026. Ambos PASS, 763/1443 expects; intervalo sobreposto comprovado.
+
+Saídas preservadas: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\p1-test-output.txt e C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\p1-typecheck-output.txt. Logs concorrentes em C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\p1-concurrent-v1.txt e C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\p1-concurrent-v2.txt.
 
 Serviços de dados e rotas dos smokes são fixtures; loaders, renderer, registry/slots e Keymap/editor usados nas verificações relevantes são os reais. Não foram usados dados ou sessões pessoais.

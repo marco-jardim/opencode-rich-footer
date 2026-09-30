@@ -33,6 +33,17 @@ describe("metrics", () => {
     for (const n of [NaN, Infinity, -1, undefined]) expect(nonnegative(n)).toBeUndefined()
     expect(outputTokens({ output: 0 })).toBeUndefined()
   })
+  test("cache-only input uses both cache reads and writes without fresh input", () => {
+    const cached = { input: 0, output: 0, reasoning: 1, cacheRead: 30, cacheWrite: 70 }
+    const value = deriveMetrics(source({
+      messages: () => [assistant({ tokens: cached })],
+      totals: () => ({ tokens: cached, cost: 0, scope: "loaded" }),
+    }))
+    expect(value.cachePercent).toBe(30)
+    expect(value.response?.input).toBe(100)
+    expect(value.scope).toBe("loaded")
+    expect(deriveMetrics(source({ totals: () => ({ tokens: { ...cached, cacheWrite: 0 }, scope: "session" }) })).cachePercent).toBe(100)
+  })
   test("reasoning-only, provider/model lookup, unknown limit and incomplete tokens", () => {
     let lookup = ""
     const value = deriveMetrics(source({ messages: () => [assistant({ tokens: { ...tokens, output: 0 } })], contextLimit: (m) => { lookup = m.providerID + "/" + m.modelID; return 0 } }))

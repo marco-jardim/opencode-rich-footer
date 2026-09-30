@@ -1,0 +1,2 @@
+Typecheck v1: passed
+Typecheck v2: passed

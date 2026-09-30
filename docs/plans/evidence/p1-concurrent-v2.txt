@@ -1,0 +1,11 @@
+bun test v1.4.2 (744846f84)
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2-loader.test.tsx:
+(pass) v2 real loader smoke > directory and file URL load, mount, update, navigate and reload with conflicting runtimes [6148.84ms]
+
+ 1 pass
+ 0 fail
+ 1443 expect() calls
+Ran 1 test across 1 file. [7.31s]
+START 2026-09-30T23:45:32.2005113Z
+END 2026-09-30T23:45:39.6817271Z
