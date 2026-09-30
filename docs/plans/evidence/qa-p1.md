@@ -1,6 +1,6 @@
 # P1 — senior QA adversarial
 
-Reviewer: agente independente gpt-6-astra, max, tier heavy. Estado: correções em verificação; PASS final pendente.
+Reviewer: agente independente gpt-6-astra, max, tier heavy. Estado: **PASS P1** no snapshot 73aab5331f68918da6a51dfc438f35d97ccb1838.
 
 ## Review de código e desenho de testes finais
 
@@ -8,10 +8,14 @@ Snapshot de origem: commits 214d8e1 e e4db71b em C:\Users\Marquinho\.codex\workt
 
 | ID | Severidade | Reprodução e impacto | Correção exigida | Estado |
 | --- | --- | --- | --- | --- |
-| P1-QA-01 | P1 | C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\adapters\v2.tsx registrava Alt+Shift+setas que já selecionavam palavras no editor/navegavam tabs. Camada posterior podia capturar edição. | Comandos sem binding padrão, disponíveis na paleta e mouse; teste Keymap.Provider + textarea reais, execução e descarte. | Corrigido; teste integrado pendente |
-| P1-QA-02 | P2 | No mesmo adaptador, listagem restringia parentID e directory; irmão movido a outro diretório desaparecia do contador/ciclo. | Listar pelo pai, catálogo ainda por localização; fixture com duas localizações e filtro real. | Corrigido; regressão em execução |
-| P1-QA-03 | P2 | Exclusão de irmão desconhecido durante página pendente era ignorada; snapshot atrasado ressuscitava alvo apagado. | Registrar tombstones antes de classificar relevância, filtrar respostas tardias, não recarregar por exclusões alheias. | Corrigido; regressão em execução |
-| P1-QA-04 | P2 | C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\navigation.ts parava nas extremidades, diferindo do ciclo v1. | Wrap usando lista do contador, não navegar para si com zero/um irmão; deduplicar IDs. | Corrigido; regressão em execução |
+| P1-QA-01 | P1 | C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\adapters\v2.tsx registrava Alt+Shift+setas que já selecionavam palavras no editor/navegavam tabs. Camada posterior podia capturar edição. | Comandos sem binding padrão, disponíveis na paleta e mouse; teste Keymap.Provider + textarea reais, execução e descarte. | Fechado pelo HEAVY em 73aab53 |
+| P1-QA-02 | P2 | No mesmo adaptador, listagem restringia parentID e directory; irmão movido a outro diretório desaparecia do contador/ciclo. | Listar pelo pai, catálogo ainda por localização; fixture com duas localizações e filtro real. | Fechado pelo HEAVY em 73aab53 |
+| P1-QA-03 | P2 | Exclusão de irmão desconhecido durante página pendente era ignorada; snapshot atrasado ressuscitava alvo apagado. | Registrar tombstones antes de classificar relevância, filtrar respostas tardias, não recarregar por exclusões alheias. | Fechado pelo HEAVY em 73aab53 |
+| P1-QA-04 | P2 | C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\src\navigation.ts parava nas extremidades, diferindo do ciclo v1. | Wrap usando lista do contador, não navegar para si com zero/um irmão; deduplicar IDs. | Fechado pelo HEAVY em 73aab53 |
+
+## Parecer final heavy
+
+Todos os quatro findings acima foram fechados pelo reviewer após conferir o diff, regressões e logs finais. Nenhum finding novo. Critérios e DoD P1 aprovados: 31 testes v1/51 v2, zero falhas/skip, typecheck ambas as matrizes, 99.26% linhas/94% branches, ciclos e smokes concorrentes, Node guard e testes reais de editor. READs liberados; P2 pode iniciar. O reviewer não executou as suites; o orquestrador executou e o reviewer conferiu as saídas preservadas.
 
 ## Testes finais adicionais solicitados
 

@@ -10,11 +10,12 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 | --- | --- |
 | P1.PF coleta | completed |
 | P1.PF avaliação heavy | completed (PASS Bun v1/v2) |
-| P1.T1 núcleo | in_progress |
-| P1.T2 adaptadores/UI | in_progress |
-| P1.T3 build/carregamento | in_progress |
-| P1.TEST / P1.QA | pending |
-| P2 | pending |
+| P1.T1 núcleo | completed |
+| P1.T2 adaptadores/UI | completed |
+| P1.T3 build/carregamento | completed |
+| P1.TEST / P1.QA | completed — heavy PASS 73aab53 |
+| P2 pre-flight | in_progress |
+| P2 implementação / QA | pending |
 | Global | pending |
 
 ## Preservação
