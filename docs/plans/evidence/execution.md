@@ -14,8 +14,9 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 | P1.T2 adaptadores/UI | completed |
 | P1.T3 build/carregamento | completed |
 | P1.TEST / P1.QA | completed — heavy PASS 73aab53 |
-| P2 pre-flight | in_progress |
-| P2 implementação / QA | pending |
+| P2 pre-flight | completed — HEAVY GO |
+| P2 implementação | in_progress — código e documentação escritos; testes integrados em execução |
+| P2 QA | pending |
 | Global | pending |
 
 ## Preservação
@@ -49,3 +50,11 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 - Tests unitários + renderer real: v1 26 pass / 154 expects; v2 36 pass / 169 expects; zero fail/skip.
 - Cobertura inicial remapeada por sourcemaps: 93.62% linhas, 87.53% branches. Loaders e testes adversariais de fim de fase ainda pendentes; isto não é aprovação P1.
 - Smoke loader inicial expôs erros na fixture (cópia Windows de junction e assinatura de setup); corrigidos pelo owner e em nova execução. Não houve alteração de host.
+
+## Ownership P2
+
+- Pre-flight HEAVY GO recebido; todos os READs de coleta liberados antes de editar.
+- Orquestrador escreveu exclusivamente `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\sandbox.ts`, `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\hosts.ts`, `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\test.ts`, `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\local-config.ts`, `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\configure-local.ts`, testes de configuração/build, manifestos e lockfile. Configuração pessoal e integração Git continuam exclusivas do root.
+- Owner v2_implementation concluiu e liberou `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\installed-smoke.ts`, `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v1-installed.test.tsx` e `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v2-installed.test.tsx`.
+- Owner ui_implementation concluiu e liberou `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\README.md` e `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v2-remote.test.tsx`.
+- Todos os writers foram encerrados antes de typecheck dual (PASS). Código/scripts/testes estão congelados sob READ do runner e HEAVY P2.TEST; root escreve somente evidências. Nenhuma configuração pessoal aplicada ainda.

@@ -1,6 +1,6 @@
 # Plano executável — rich footer nos forks pessoais OpenCode v1 e v2
 
-Data: 30/09/2026. Estado: planejamento; implementação não iniciada.
+Data: 30/09/2026. Estado: implementação autorizada; P1 aprovada; P2 em validação operacional.
 
 Documento canônico: `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\2026-09-30-opencode-v1-v2-compatibility.md`.
 
@@ -10,7 +10,7 @@ Entregar uma solução definitiva para o plugin funcionar nos forks pessoais loc
 
 O uso é exclusivamente pessoal. Não criar PR, issue ou contribuição upstream; não publicar npm, release pública, pacote remoto ou realizar push. São permitidas, durante a futura execução autorizada, as customizações necessárias nos forks locais. Preferir as extensões já existentes; modificar o host apenas quando uma limitação real impedir o objetivo.
 
-O pedido atual é editar e revisar este plano. As fases abaixo continuam pendentes. Os pre-flights, testes e reviews de implementação devem ser efetivamente realizados quando o plano for executado, não declarados concluídos por existir uma checklist.
+O usuário autorizou executar este plano. O estado real de cada task, os testes e os pareceres independentes ficam em `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\execution.md`. As checklists abaixo são critérios de execução; não antecipam aprovação.
 
 | Alvo | Escopo obrigatório |
 | --- | --- |
@@ -493,6 +493,6 @@ Custos desconhecidos, dados ausentes ou runtime indisponível devem constar como
 - [Loader TUI v2](https://github.com/marco-jardim/opencode/blob/74dbc509d74df46a2523676dd4068225c4f0c9b0/packages/tui/src/plugin/context.tsx), [resolvedor v2](https://github.com/marco-jardim/opencode/blob/74dbc509d74df46a2523676dd4068225c4f0c9b0/packages/plugin/src/host.ts) e [runtime Node v2](https://github.com/marco-jardim/opencode/blob/74dbc509d74df46a2523676dd4068225c4f0c9b0/packages/tui/src/plugin/runtime-plugin-support.node.ts).
 - [Dados reativos v2](https://github.com/marco-jardim/opencode/blob/74dbc509d74df46a2523676dd4068225c4f0c9b0/packages/client/src/solid/data.ts), [mensagens v2](https://github.com/marco-jardim/opencode/blob/74dbc509d74df46a2523676dd4068225c4f0c9b0/packages/schema/src/session-message.ts) e [validador server v2](https://github.com/marco-jardim/opencode/blob/74dbc509d74df46a2523676dd4068225c4f0c9b0/packages/core/src/plugin/module.ts).
 
-## 13. Revisão deste documento
+## 13. Revisão documental anterior à implementação
 
 Pre-flight documental realizado: diretório e estado Git conferidos, documento anterior lido, protocolo local do model-router verificado e escopo pessoal incorporado. Nenhum arquivo de implementação foi alterado. A primeira revisão adversarial heavy encontrou QA-01 (identidade do runtime), QA-02 (resincronização da instalação) e QA-03 (acceptance por subtask). Os três pontos foram corrigidos e receberam PASS no re-review independente do mesmo senior QA heavy. Parecer global documental: PASS, sem novos achados relevantes, sobre o snapshot SHA256 `233BB6B44FAEF34D44376A3F05511151DE0BBE823F82F111D2D224B46D28B582`; somente este recibo factual foi atualizado depois. Esta aprovação é do plano: implementação, testes e validação operacional continuam pendentes; nenhum gate de implementação foi aprovado antecipadamente.

@@ -13,7 +13,9 @@
     "build": "bun scripts/build.ts",
     "typecheck": "bun scripts/typecheck.ts",
     "test": "bun scripts/test.ts",
-    "test:coverage": "bun scripts/test.ts --coverage"
+    "test:coverage": "bun scripts/test.ts --coverage",
+    "smoke": "bun scripts/installed-smoke.ts",
+    "configure:local": "bun scripts/configure-local.ts"
   },
   "keywords": [
     "opencode",
@@ -59,6 +61,7 @@
     "istanbul-lib-report": "3.0.1",
     "istanbul-lib-source-maps": "5.0.6",
     "istanbul-reports": "3.2.0",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "jsonc-parser": "3.3.1"
   }
 }

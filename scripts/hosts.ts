@@ -11,7 +11,7 @@ export const hosts = {
   v2: {
     root: process.env.RICH_FOOTER_V2_HOST ?? "D:/git/opencode-rich-footer-host-v2",
     runtime: "packages/tui",
-    bun: process.env.RICH_FOOTER_V2_BUN ?? "C:/Users/Marquinho/AppData/Local/Temp/rich-footer-bun-1.4.2/package/bin/bun.exe",
+    bun: process.env.RICH_FOOTER_V2_BUN ?? "C:/Users/Marquinho/.bun/versions/1.4.2/bun.exe",
   },
 }
 

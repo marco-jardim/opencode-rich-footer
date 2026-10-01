@@ -32,6 +32,10 @@ async function build(directory: string) {
     if (entry.isDirectory()) { await build(file); continue }
     if (!/\.tsx?$/.test(file) || file.endsWith(".d.ts")) continue
     const relative = path.relative(path.join(root, "src"), file).replace(/\.tsx?$/, ".js")
+    await compile(file, path.join(out, relative), instrument && entry.name !== "contracts.ts")
+  }
+}
+async function compile(file: string, target: string, tracked: boolean) {
     const result = await transformAsync(await readFile(file, "utf8"), {
       filename: file,
       sourceMaps: true,
@@ -45,17 +49,20 @@ async function build(directory: string) {
     if (!linked?.code) throw new Error(`Empty linked compilation: ${file}`)
     const code = linked.code
     const instrumenter = createInstrumenter({ esModules: true, produceSourceMap: true })
-    const compiled = instrument && entry.name !== "contracts.ts"
+    const compiled = tracked
       ? instrumenter.instrumentSync(code, file, linked.map ? { ...linked.map, version: String(linked.map.version) } : undefined)
       : code
-    const map = instrument && entry.name !== "contracts.ts" ? instrumenter.lastSourceMap() : linked.map
-    if (instrument && entry.name !== "contracts.ts") initialCoverage[file] = instrumenter.lastFileCoverage()
-    const target = path.join(out, relative)
+    const map = tracked ? instrumenter.lastSourceMap() : linked.map
+    if (tracked) initialCoverage[file] = instrumenter.lastFileCoverage()
     await mkdir(path.dirname(target), { recursive: true })
     await writeFile(target, compiled + "\n" + (map ? "//# sourceMappingURL=data:application/json;base64," + Buffer.from(JSON.stringify(map)).toString("base64") + "\n" : ""))
-  }
 }
 
 await build(path.join(root, "src"))
-if (instrument) await writeFile(path.join(root, ".cache/coverage-initial.json"), JSON.stringify(initialCoverage))
+if (instrument) {
+  for (const file of ["local-config.ts", "configure-local.ts", "hosts.ts"]) {
+    await compile(path.join(root, "scripts", file), path.join(root, ".cache/instrumented-scripts", file.replace(/\.ts$/, ".js")), file !== "hosts.ts")
+  }
+  await writeFile(path.join(root, ".cache/coverage-initial.json"), JSON.stringify(initialCoverage))
+}
 console.log(`ESM ${instrument ? "instrumented" : "build"}: ${out}`)

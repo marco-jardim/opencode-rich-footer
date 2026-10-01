@@ -1,0 +1,166 @@
+$ bun scripts/test.ts --coverage
+ESM instrumented: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\instrumented
+bun test v1.3.14 (0d9b296a)
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v1\tests\core.test.ts:
+(pass) metrics > preserves session totals, response values, cache denominator and identity [1.09ms]
+(pass) metrics > missing, invalid and zero totals never become invented data [0.32ms]
+(pass) metrics > cache-only input uses both cache reads and writes without fresh input [0.37ms]
+(pass) metrics > reasoning-only, provider/model lookup, unknown limit and incomplete tokens [0.33ms]
+(pass) metrics > completed compaction invalidates context; pending compaction preserves it; pagination cannot change totals [0.28ms]
+(pass) metrics > labels and position require real session membership [0.90ms]
+(pass) metrics > formatting handles thresholds and invalid data [0.33ms]
+(pass) clock > batch counts are approximate only with valid streaming boundaries [1.08ms]
+(pass) clock > elapsed resets per run and session, retry does not restart, invalid clock ignored [0.21ms]
+(pass) clock > live samples start with observed baseline and reset on message/count regression [1.64ms]
+(pass) facade identifies the plugin and rejects unsupported runtime before UI imports [0.41ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v1\tests\entrypoints.test.ts:
+(pass) legacy/server discovery cannot mistake the client hook for a v2 server setup [3.07ms]
+(pass) actual Node import stays UI-free and rejects both activation paths clearly [79.06ms]
+(pass) emitted facade imports generations lazily without SDK or UI dependencies [3.62ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v1\tests\footer.test.tsx:
+(pass) root sessions render nothing and a reactive child appears [49.32ms]
+(pass) 40, 80 and 120 column layouts keep all navigation visible and avoid wrapping [24.62ms]
+(pass) response usage and loaded/session cost scopes are explicit, including zero cost [8.19ms]
+(pass) theme and hover colors follow current semantic tokens [26.07ms]
+(pass) mouse actions follow session and enabled state while shortcut text updates [273.56ms]
+(pass) footer does not register keyboard bindings or take input focus on click [75.81ms]
+(pass) navigation rejection is diagnosed without an unhandled promise [62.48ms]
+(pass) running/retry timer clears on session switch, idle, root and owner disposal [11.19ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v1\tests\local-config.test.ts:
+(pass) personal configuration transaction > removes only identified server declarations and preserves unrelated data/options/comments [5.22ms]
+(pass) personal configuration transaction > normalizes one enabled TUI declaration, retains plugin options and other keys [3.18ms]
+(pass) personal configuration transaction > apply is idempotent; rollback restores original bytes and original absence [36.83ms]
+(pass) personal configuration transaction > restore compensates a failed second publication and can resume after compensation also fails [42.83ms]
+(pass) personal configuration transaction > a cleanup failure after publishing a new file is compensated and diagnosed [7.45ms]
+(pass) personal configuration transaction > drift or corrupted backups reject before any destructive restore [23.17ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v1\tests\v1-loader.test.tsx:
+(pass) v1 real loader smoke > directory and file URL load, mount, update, navigate and reload with conflicting runtimes [8225.35ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v1\tests\v1.test.tsx:
+(pass) v1 source > preserves reasoning-only usage, valid zeroes, model identity and loaded scope [12.40ms]
+(pass) v1 source > unknown, invalid and empty usage remain unknown instead of zero [0.35ms]
+(pass) v1 source > maps only known statuses and does not create stream timestamps [0.30ms]
+(pass) v1 source > preserves host sibling order and still navigates when children is absent [0.47ms]
+(pass) v1 source > reads shortcuts and current commands at click time, disables root and disposal [0.59ms]
+(pass) v1 source > connection, directory and session changes invalidate the source key [0.27ms]
+(pass) v1 source > maps completed summaries to context boundaries and retains incomplete requests [0.55ms]
+(pass) v1 source > diagnoses rejected and thrown navigation commands [0.38ms]
+
+ 37 pass
+ 0 fail
+ 972 expect() calls
+Ran 37 tests across 6 files. [21.78s]
+bun test v1.4.2 (744846f84)
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\core.test.ts:
+(pass) metrics > preserves session totals, response values, cache denominator and identity [0.63ms]
+(pass) metrics > missing, invalid and zero totals never become invented data [0.14ms]
+(pass) metrics > cache-only input uses both cache reads and writes without fresh input [0.20ms]
+(pass) metrics > reasoning-only, provider/model lookup, unknown limit and incomplete tokens [0.20ms]
+(pass) metrics > completed compaction invalidates context; pending compaction preserves it; pagination cannot change totals [0.21ms]
+(pass) metrics > labels and position require real session membership [0.22ms]
+(pass) metrics > formatting handles thresholds and invalid data [0.18ms]
+(pass) clock > batch counts are approximate only with valid streaming boundaries [0.56ms]
+(pass) clock > elapsed resets per run and session, retry does not restart, invalid clock ignored [0.17ms]
+(pass) clock > live samples start with observed baseline and reset on message/count regression [0.92ms]
+(pass) facade identifies the plugin and rejects unsupported runtime before UI imports [0.18ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\entrypoints.test.ts:
+(pass) legacy/server discovery cannot mistake the client hook for a v2 server setup [0.05ms]
+(pass) actual Node import stays UI-free and rejects both activation paths clearly [76.41ms]
+(pass) emitted facade imports generations lazily without SDK or UI dependencies [2.63ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\footer.test.tsx:
+(pass) root sessions render nothing and a reactive child appears [35.67ms]
+(pass) 40, 80 and 120 column layouts keep all navigation visible and avoid wrapping [17.84ms]
+(pass) response usage and loaded/session cost scopes are explicit, including zero cost [5.18ms]
+(pass) theme and hover colors follow current semantic tokens [12.63ms]
+(pass) mouse actions follow session and enabled state while shortcut text updates [168.36ms]
+(pass) footer does not register keyboard bindings or take input focus on click [52.36ms]
+(pass) navigation rejection is diagnosed without an unhandled promise [35.72ms]
+(pass) running/retry timer clears on session switch, idle, root and owner disposal [6.99ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\local-config.test.ts:
+(pass) personal configuration transaction > removes only identified server declarations and preserves unrelated data/options/comments [3.57ms]
+(pass) personal configuration transaction > normalizes one enabled TUI declaration, retains plugin options and other keys [1.66ms]
+(pass) personal configuration transaction > apply is idempotent; rollback restores original bytes and original absence [22.97ms]
+(pass) personal configuration transaction > restore compensates a failed second publication and can resume after compensation also fails [24.42ms]
+(pass) personal configuration transaction > a cleanup failure after publishing a new file is compensated and diagnosed [6.35ms]
+(pass) personal configuration transaction > drift or corrupted backups reject before any destructive restore [14.50ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2-build.test.ts:
+(pass) clean Unicode installation diagnoses a missing compiler dependency and recovers with the frozen lock [4584.42ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2-config.test.ts:
+(pass) real v2 migration preserves preference precedence, other plugins and options; unknown KV is excluded [1178.46ms]
+(pass) sandbox install, real config service read and byte-exact rollback; existing client preferences survive [1816.64ms]
+(pass) CLI dry-run/apply/restore and runtime errors terminate within a bound without unauthorized writes [1457.16ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2-keymap.test.tsx:
+(pass) v2 footer preserves host word selection with alt+shift+left/right in the focused composer textarea [64.05ms]
+(pass) native word-selection bindings loaded from a real CLI config retain editor behavior with the footer [63.98ms]
+(pass) v2 commands reach the real palette/dispatch without default bindings and clean up with the owner [22.37ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2-loader.test.tsx:
+(pass) v2 real loader smoke > directory and file URL load, mount, update, navigate and reload with conflicting runtimes [4342.55ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2-remote.test.tsx:
+(pass) real v2 HTTP client paginates cross-directory siblings and renders the remote model limit [39.30ms]
+(pass) real HTTP failures are diagnosed, preserve unknown state and recover from a fresh sync [44.10ms]
+
+C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\test-v2\tests\v2.test.tsx:
+(pass) v2 normalization > assistant tokens and cost are absent until step.ended [0.23ms]
+(pass) v2 normalization > completed compaction marks the context boundary; running and failed do not [0.18ms]
+(pass) v2 normalization > nonfinite and negative values remain unknown, valid zero is preserved [0.06ms]
+(pass) direct sibling navigation > root has no siblings; descendants and other parents are excluded [0.13ms]
+(pass) direct sibling navigation > creation ties sort by ID regardless of update/list order [0.13ms]
+(pass) direct sibling navigation > removed or missing current session cannot select a neighbor [0.10ms]
+(pass) direct sibling navigation > unknown creation dates sort before known dates and duplicate IDs count once [0.09ms]
+(pass) v2 source lifecycle > authoritative totals stay independent of loaded/paginated messages [1.36ms]
+(pass) v2 source lifecycle > root performs no subagent sync, listener or command registration [0.32ms]
+(pass) v2 source lifecycle > model resolution uses provider and public model ID, and preserves unknown limits [0.46ms]
+(pass) v2 source lifecycle > sync runs once per location/session key and uses the session directory [0.42ms]
+(pass) v2 source lifecycle > actions and command runs revalidate after a sibling move or route change [0.74ms]
+(pass) v2 source lifecycle > pagination gives navigation and position the same complete list [0.78ms]
+(pass) v2 source lifecycle > siblings in different directories are fetched by parent without a location filter [0.55ms]
+(pass) v2 source lifecycle > a deletion during the first pending page tombstones an uncached sibling [0.64ms]
+(pass) v2 source lifecycle > created and moved events during a pending page coalesce into one additional refresh [0.57ms]
+(pass) v2 source lifecycle > unrelated events do not refresh a settled sibling list [0.40ms]
+(pass) v2 source lifecycle > deletion disables stale targets even before the host cache catches up [0.43ms]
+(pass) v2 source lifecycle > registered commands preserve editing arrows and saved runs stop after disposal [0.38ms]
+(pass) v2 source lifecycle > rejections are diagnosed and cleanup removes listeners/commands [0.40ms]
+(pass) v2 source lifecycle > repeated pagination cursors stop without exposing a partial sibling list [0.32ms]
+(pass) v2 source lifecycle > late child-sync response from an old key cannot affect the new session [0.40ms]
+(pass) v2 source lifecycle > late child-sync resolve after a location change cannot publish or diagnose [0.62ms]
+(pass) v2 source lifecycle > late child-sync reject after a location change cannot publish or diagnose [0.28ms]
+(pass) v2 source lifecycle > a successful child-sync response after cleanup cannot publish or navigate [0.25ms]
+(pass) v2 source lifecycle > late responses and rejection after cleanup cannot publish or diagnose [0.22ms]
+
+ 64 pass
+ 0 fail
+ 1873 expect() calls
+Ran 64 tests across 10 files. [15.71s]
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    98.2 |    93.41 |   98.93 |   99.46 |
+ scripts           |   96.63 |    91.94 |     100 |     100 |
+  ...gure-local.ts |     100 |    93.93 |     100 |     100 | 42,56
+  local-config.ts  |   95.67 |    91.37 |     100 |     100 | ...,50,70,146-149
+ src               |   99.38 |       95 |   98.59 |   99.54 |
+  footer.tsx       |   98.98 |    89.74 |   97.95 |   99.17 | 24
+  metrics.ts       |     100 |      100 |     100 |     100 |
+  navigation.ts    |     100 |    86.36 |     100 |     100 | 8,17
+  timing.ts        |     100 |      100 |     100 |     100 |
+  tui.ts           |     100 |      100 |     100 |     100 |
+ src/adapters      |      98 |    92.51 |   98.86 |   98.93 |
+  v1.tsx           |     100 |     90.9 |     100 |     100 | 62-77,96,111
+  v2.tsx           |   97.15 |     93.2 |   98.14 |    98.4 | 84,179
+-------------------|---------|----------|---------|---------|-------------------
+Coverage src: 99.26% lines, 94% branches
+Coverage scripts: 100% lines, 91.94% branches
