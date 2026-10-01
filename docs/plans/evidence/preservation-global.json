@@ -1,0 +1,39 @@
+{
+  "checkedUtc": "2026-10-01T00:41:44.6586328Z",
+  "hashes": [],
+  "hosts": [
+    {
+      "path": "D:\\git\\opencode",
+      "head": "1d883fccc393e9b9d3a41cb6cc11caf892a96db4",
+      "status": [
+        "?? .opencode/router-lessons.md"
+      ]
+    },
+    {
+      "path": "D:\\git\\opencode-rich-footer-host-v2",
+      "head": "74dbc509d74df46a2523676dd4068225c4f0c9b0",
+      "status": []
+    }
+  ],
+  "personalProcessesObserved": [
+    {
+      "pid": 51084,
+      "startedUtc": "2026-09-30T22:59:34.9401230Z"
+    },
+    {
+      "pid": 44400,
+      "startedUtc": "2026-09-30T23:01:07.5575670Z"
+    },
+    {
+      "pid": 55472,
+      "startedUtc": "2026-09-30T23:31:00.3440320Z"
+    },
+    {
+      "pid": 38076,
+      "startedUtc": "2026-09-30T23:56:53.7140040Z"
+    }
+  ],
+  "testRunnersRemaining": 0,
+  "processesStoppedByTask": 0,
+  "note": "PID60584 not observed; no external process changes attributed to this task. Private contents not included."
+}

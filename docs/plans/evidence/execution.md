@@ -17,7 +17,7 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 | P2 pre-flight | completed — HEAVY GO |
 | P2 implementação | completed — destino e configuração pessoal integrados |
 | P2 QA | completed — HEAVY PASS 6830d454a9378930f2764932dad566eabade854f |
-| Global | in_progress — pre-flight HEAVY GO; coleta integral no destino |
+| Global | in_progress — G.TEST completed; G.QA em revisão |
 
 ## Preservação
 
@@ -83,3 +83,9 @@ Aplicação pessoal realizada após GO explícito de re-review HEAVY. Backup pri
 P2 recebeu PASS independente do HEAVY no snapshot `6830d454a9378930f2764932dad566eabade854f`, com todos os seis findings fechados. Reviewer conferiu 49 pares do manifesto, hashes reais das quatro configurações, backup, dois arquivos preexistentes e Bun 1.4.2. Build após sincronização e smoke direto do destino passaram. READs liberados antes deste recibo.
 
 G.PF: completed, HEAVY GO. G.TEST: in_progress, executar build, typecheck dual, cobertura completa e smoke concorrente no destino após sincronizar este recibo. G.QA: pending. Sem writers de produto; root é o único writer de evidências e integrador Git. A coleta auxiliar lê somente o plano, metadados Git e arquivos protegidos. Os checkpoints anteriores preservam a cronologia e não substituem este estado atual.
+
+## Validação global — 59b29fc
+
+G.TEST: completed no destino `D:\git\opencode-rich-footer`, HEAD `59b29fc4260a1824d7cec5b90c24f366b5eb45b4`. Build e tipos dual passaram. Suite completa: v1 37 pass/0 fail/972 assertions; v2 64 pass/0 fail/1873 assertions. Coverage do plugin 99,26% linhas/94% branches; scripts operacionais 100%/91,94%. Todos os nove arquivos executáveis instrumentados satisfazem individualmente 90%/85%.
+
+Smoke concorrente instalado: 2 pass por geração, 611 assertions v1 e 1081 v2; 20 ciclos principais de render por geração, recuperação e atualização em pacotes independentes. Artefatos SHA256 agregado `b044b671009c3fe0ba4b3d1daff9ad3a1e3fea3f16a9bc8d0cd2a19744f03c40`; 49 pares origem/destino conferidos. G.QA: in_progress após sincronizar os recibos e repetir P2.T3; nenhuma mudança de produto após G.TEST.

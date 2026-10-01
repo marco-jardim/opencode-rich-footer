@@ -1,6 +1,6 @@
 # Plano executável — rich footer nos forks pessoais OpenCode v1 e v2
 
-Data: 30/09/2026. Estado: implementação autorizada; P1 aprovada; P2 em validação operacional.
+Data do plano: 30/09/2026. Estado: P1 e P2 aprovadas pelo QA HEAVY; validação global executada no destino; revisão global em andamento.
 
 Documento canônico: `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\2026-09-30-opencode-v1-v2-compatibility.md`.
 
@@ -478,11 +478,11 @@ Depois de três falhas consecutivas no mesmo problema, parar a edição e recupe
 
 O orquestrador mantém `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\execution.md` com status de wave/phase/task/subtask, owners, locks, snapshots, SHAs, commits, resultados, coverage e findings. Marcar `in_progress` antes de cada unidade e `completed` imediatamente após seu acceptance, sem preencher conclusões em lote. A edição desse registro também é exclusiva; leitores recebem snapshot.
 
-| Unidade | Estado inicial | Gate necessário |
+| Unidade | Estado atual | Gate necessário |
 | --- | --- | --- |
-| W1 / P1 | pending | P1.PF → P1.T1/T2/T3 → P1.TEST → P1.QA → DoD P1 |
-| W2 / P2 | pending | P2.PF → P2.T1/T2 → testes novos P2 → P2.T3 → execução P2.TEST → P2.QA → DoD P2 |
-| Global | pending | P2.T3 → G.TEST → G.QA → DoD global |
+| W1 / P1 | completed — HEAVY PASS 73aab53 | P1.PF → P1.T1/T2/T3 → P1.TEST → P1.QA → DoD P1 |
+| W2 / P2 | completed — HEAVY PASS 6830d45 | P2.PF → P2.T1/T2 → testes novos P2 → P2.T3 → execução P2.TEST → P2.QA → DoD P2 |
+| Global | in_progress — G.TEST passou; G.QA pendente | P2.T3 → G.TEST → G.QA → DoD global |
 
 Custos desconhecidos, dados ausentes ou runtime indisponível devem constar como tais; nunca registrar “passou” sem output. A ausência de um runtime opcional não autoriza marcar teste como passado; a ausência de v1 ou v2 obrigatório é bloqueio real. Qualquer redução de objetivo exige decisão humana, não ajuste silencioso de critérios.
 

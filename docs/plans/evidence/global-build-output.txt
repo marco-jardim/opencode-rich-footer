@@ -1,0 +1,2 @@
+$ bun scripts/build.ts
+ESM build: D:\git\opencode-rich-footer\dist
