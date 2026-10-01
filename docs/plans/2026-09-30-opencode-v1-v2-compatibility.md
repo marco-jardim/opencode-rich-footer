@@ -1,6 +1,6 @@
 # Plano executável — rich footer nos forks pessoais OpenCode v1 e v2
 
-Data do plano: 30/09/2026. Estado: P1 e P2 aprovadas pelo QA HEAVY; validação global executada no destino; revisão global em andamento.
+Data do plano: 30/09/2026. Estado: implementação concluída; P1, P2 e global aprovadas pelo QA HEAVY, zero findings abertos. Parecer global no snapshot `ed3a65a538193fc5654e042de50445cebdfa9dfd`; recibo factual final sujeito à confirmação pós-commit de build, hashes e smoke descrita em `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\qa-global.md`.
 
 Documento canônico: `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\2026-09-30-opencode-v1-v2-compatibility.md`.
 
@@ -482,7 +482,7 @@ O orquestrador mantém `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-f
 | --- | --- | --- |
 | W1 / P1 | completed — HEAVY PASS 73aab53 | P1.PF → P1.T1/T2/T3 → P1.TEST → P1.QA → DoD P1 |
 | W2 / P2 | completed — HEAVY PASS 6830d45 | P2.PF → P2.T1/T2 → testes novos P2 → P2.T3 → execução P2.TEST → P2.QA → DoD P2 |
-| Global | in_progress — G.TEST passou; G.QA pendente | P2.T3 → G.TEST → G.QA → DoD global |
+| Global | completed — G.TEST e G.QA HEAVY PASS ed3a65a; fechamento documental conforme recibo | P2.T3 → G.TEST → G.QA → DoD global |
 
 Custos desconhecidos, dados ausentes ou runtime indisponível devem constar como tais; nunca registrar “passou” sem output. A ausência de um runtime opcional não autoriza marcar teste como passado; a ausência de v1 ou v2 obrigatório é bloqueio real. Qualquer redução de objetivo exige decisão humana, não ajuste silencioso de critérios.
 
