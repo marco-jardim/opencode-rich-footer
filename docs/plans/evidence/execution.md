@@ -15,8 +15,8 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 | P1.T3 build/carregamento | completed |
 | P1.TEST / P1.QA | completed — heavy PASS 73aab53 |
 | P2 pre-flight | completed — HEAVY GO |
-| P2 implementação | in_progress — código e documentação escritos; testes integrados em execução |
-| P2 QA | pending |
+| P2 implementação | completed — destino e configuração pessoal integrados |
+| P2 QA | in_progress — findings fechados; fechamento factual de fase pendente |
 | Global | pending |
 
 ## Preservação
@@ -58,3 +58,22 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 - Owner v2_implementation concluiu e liberou `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\scripts\installed-smoke.ts`, `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v1-installed.test.tsx` e `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v2-installed.test.tsx`.
 - Owner ui_implementation concluiu e liberou `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\README.md` e `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\tests\v2-remote.test.tsx`.
 - Todos os writers foram encerrados antes de typecheck dual (PASS). Código/scripts/testes estão congelados sob READ do runner e HEAVY P2.TEST; root escreve somente evidências. Nenhuma configuração pessoal aplicada ainda.
+## P2 — checkpoint 943a334
+
+| Task | Estado atual |
+| --- | --- |
+| P2.PF.a/P2.PF.b | completed — coleta e GO HEAVY |
+| P2.T1.a integração | completed — fast-forward no destino, frozen install e build; lock npm preexistente preservado |
+| P2.T1.b configuração pessoal | completed — changed2, segunda aplicação changed0; validação sanitizada PASS |
+| P2.T2.a documentação | completed — comandos CLI e limitações reais documentados; sandbox exercitou dry-run/apply/restore |
+| P2.TEST novos casos | completed — 37 v1/64 v2; smoke2+2, typecheck dual, thresholds separados |
+| P2.T3 sincronização | completed para 943a334 — 40 arquivos relevantes e9artefatos idênticos; repetir após novos commits |
+| P2.QA | in_progress — re-review dos6findings no snapshot sincronizado |
+| Global | pending |
+
+Todos os writers de código foram encerrados. Root escreveu os scripts operacionais; os delegates escreveram testes/docs com arquivos exclusivos e entregaram antes dos runners. HEAVY tem READ de código, testes, README e logs congelados; root continua WRITE apenas em evidências. Nenhuma configuração pessoal aplicada.
+
+Bun lock format1 foi necessário para instalação congelada no Bun1.3.14; mesmos registros de dependências anteriores, mais jsonc-parser3.3.1. Ambos Bun1.3.14/1.4.2 aceitam --frozen-lockfile. Cobertura do plugin99.26%linhas/94%branches; instalador100%/91.94%, medido também nos processosCLI.
+
+Preservação revalidada após integração: hashes de `D:\git\opencode-rich-footer\package-lock.json` e `D:\git\opencode\.opencode\router-lessons.md` intactos; SHAs dos hosts iguais. PIDs51084/44400/55472 mantêm horários de início. PID60584 deixou de existir entre verificações, sem qualquer comando de encerramento/reinício desta execução. Não atribuir esse evento externo à instalação nem afirmar que sessões pessoais passaram a usar o build novo.
+Aplicação pessoal realizada após GO explícito de re-review HEAVY. Backup privado `C:\Users\Marquinho\.config\opencode\rich-footer-backup-20261001T002712Z\manifest.json`; validação de hashes e preservação concluída. Nenhum writer de produto ativo. Próximo gate: sincronizar recibos, rebuild/smoke no destino e PASS P2 antes da validação global.
