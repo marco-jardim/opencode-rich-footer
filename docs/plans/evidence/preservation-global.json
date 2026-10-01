@@ -1,6 +1,47 @@
 {
   "checkedUtc": "2026-10-01T00:41:44.6586328Z",
-  "hashes": [],
+  "hashes": [
+    {
+      "path": "C:\\Users\\Marquinho\\.config\\opencode\\opencode.json",
+      "sha256": "0FF7EAF87DA795E4FB0D837E512CD19F3B4850EA23DB640B657E29FA1DB2DF57",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\Marquinho\\.config\\opencode\\tui.json",
+      "sha256": "41953C11E6D4EFCCE842BE2756B8C22032FDE292ABB0FC54F2C81EF242BCD2FE",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\Marquinho\\.config\\opencode\\cli.json",
+      "sha256": "5927E0198E34C8F5530DB2285B46C3B224DE102D90467816AEA647959D0264E4",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\Marquinho\\.local\\state\\opencode\\kv.json",
+      "sha256": "15CBF1DBAB4D3C511585CA252D31E60224A014322C071F5F084E4112E7F4CDC3",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\Marquinho\\.config\\opencode\\rich-footer-backup-20261001T002712Z\\0.before",
+      "sha256": "67ADCD7539BA19762A172DF13FC3B30D58E54CFDB38291C3618258D1EB260EAE",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\Marquinho\\.bun\\versions\\1.4.2\\bun.exe",
+      "sha256": "15277C59CCD6C6C20F8DC9716C2B59C1776320D606B6A8658F70BE8799519CA4",
+      "matches": true
+    },
+    {
+      "path": "D:\\git\\opencode-rich-footer\\package-lock.json",
+      "sha256": "82084C5F47AFC36B6485D8126FF3DBBA7CAEC46DA5D64D681A1E13E62096677F",
+      "matches": true
+    },
+    {
+      "path": "D:\\git\\opencode\\.opencode\\router-lessons.md",
+      "sha256": "ECA62510B934FB68C4DFCA8F4632EF8902E003D3444CFD70D34E8FBD6549FC4E",
+      "matches": true
+    }
+  ],
   "hosts": [
     {
       "path": "D:\\git\\opencode",
@@ -18,22 +59,23 @@
   "personalProcessesObserved": [
     {
       "pid": 51084,
-      "startedUtc": "2026-09-30T22:59:34.9401230Z"
+      "startedUtc": "2026-09-30T22:59:34.940123Z"
     },
     {
       "pid": 44400,
-      "startedUtc": "2026-09-30T23:01:07.5575670Z"
+      "startedUtc": "2026-09-30T23:01:07.557567Z"
     },
     {
       "pid": 55472,
-      "startedUtc": "2026-09-30T23:31:00.3440320Z"
+      "startedUtc": "2026-09-30T23:31:00.344032Z"
     },
     {
       "pid": 38076,
-      "startedUtc": "2026-09-30T23:56:53.7140040Z"
+      "startedUtc": "2026-09-30T23:56:53.714004Z"
     }
   ],
   "testRunnersRemaining": 0,
   "processesStoppedByTask": 0,
-  "note": "PID60584 not observed; no external process changes attributed to this task. Private contents not included."
+  "note": "PID60584 not observed; no external process changes attributed to this task. Private contents not included.",
+  "hashRecheckUtc": "2026-10-01T00:42:15.2797793Z"
 }
