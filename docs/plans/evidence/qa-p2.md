@@ -1,6 +1,6 @@
 # P2 — avaliação HEAVY e fechamento
 
-Estado: seis findings fechados pelo HEAVY em 943a334; aplicação pessoal realizada e validada; fechamento P2 final em revisão. Reviewer independente gpt-6-astra/max. O pre-flight teve GO; isso não é aprovação P2.
+Estado: **PASS P2** no snapshot `6830d454a9378930f2764932dad566eabade854f`. Seis findings fechados pelo HEAVY em 943a334; aplicação pessoal realizada e validada. Reviewer independente gpt-6-astra/max. Pre-flight global recebeu GO; aprovação global permanece pendente.
 
 ## Achados preliminares do reviewer
 
@@ -26,3 +26,11 @@ P2-QA-01 recebeu compensação, retomada pelo hash original e rastreio de public
 ## Re-review e aplicação
 
 Reviewer independente confirmou GO de aplicação e fechou P2-QA-01..06 no commit943a334, sem novos findings. Recalculou49pares de hashes (40fontes/docs+9artefatos), conferiu37testesv1/64v2, typecheckdual,smokeinstalado e cobertura separada100%/91.94% do instalador. READs liberados antes das alterações pessoais. Aplicação posterior retornou changed2; segundaaplicação changed0. Hashes/backup/validação sanitizada estão em `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\docs\plans\evidence\configuration-p2.json`. Parecer de fase final aguarda conferência desse recibo e nova P2.T3 documental.
+
+## Parecer final da fase
+
+**PASS P2 em `6830d454a9378930f2764932dad566eabade854f`, sem findings abertos.** Reviewer independente reconferiu o recibo real de configuração, os 49 pares do manifesto, backup original, arquivos protegidos, runtime durável e estados Git dos hosts. Origem e destino estavam nesse mesmo HEAD. Logs congelados de smoke pós-sincronização: `C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer\.cache\p2-synced-smoke.txt`, duas verificações aprovadas por geração.
+
+O build pós-sincronização foi observado diretamente no stdout do comando (chunk ec37f9): `Updating 943a334..6830d45`, `Fast-forward`, `$ bun scripts/build.ts`, `ESM build: D:\git\opencode-rich-footer\dist`. O comando verificou o exit code antes do smoke, que terminou com exit 0 (chunk a6ec67). Não existia arquivo separado de stdout desse build; esta é uma declaração de proveniência, não uma captura retroativa. O HEAVY aceitou essa evidência junto dos nove artefatos reconferidos e do smoke do mesmo HEAD.
+
+Pre-flight global: **GO**, com build, typecheck dual, cobertura completa e smoke concorrente a executar no destino. Aprovação global não antecipada. Todos os READs de P2 foram liberados. Este recibo factual será sincronizado antes da coleta global.

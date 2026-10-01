@@ -16,8 +16,8 @@ Workspace: C:\Users\Marquinho\.codex\worktrees\6f86\opencode-rich-footer. Plataf
 | P1.TEST / P1.QA | completed — heavy PASS 73aab53 |
 | P2 pre-flight | completed — HEAVY GO |
 | P2 implementação | completed — destino e configuração pessoal integrados |
-| P2 QA | in_progress — findings fechados; fechamento factual de fase pendente |
-| Global | pending |
+| P2 QA | completed — HEAVY PASS 6830d454a9378930f2764932dad566eabade854f |
+| Global | in_progress — pre-flight HEAVY GO; coleta integral no destino |
 
 ## Preservação
 
@@ -77,3 +77,9 @@ Bun lock format1 foi necessário para instalação congelada no Bun1.3.14; mesmo
 
 Preservação revalidada após integração: hashes de `D:\git\opencode-rich-footer\package-lock.json` e `D:\git\opencode\.opencode\router-lessons.md` intactos; SHAs dos hosts iguais. PIDs51084/44400/55472 mantêm horários de início. PID60584 deixou de existir entre verificações, sem qualquer comando de encerramento/reinício desta execução. Não atribuir esse evento externo à instalação nem afirmar que sessões pessoais passaram a usar o build novo.
 Aplicação pessoal realizada após GO explícito de re-review HEAVY. Backup privado `C:\Users\Marquinho\.config\opencode\rich-footer-backup-20261001T002712Z\manifest.json`; validação de hashes e preservação concluída. Nenhum writer de produto ativo. Próximo gate: sincronizar recibos, rebuild/smoke no destino e PASS P2 antes da validação global.
+
+## Fechamento P2 e pre-flight global
+
+P2 recebeu PASS independente do HEAVY no snapshot `6830d454a9378930f2764932dad566eabade854f`, com todos os seis findings fechados. Reviewer conferiu 49 pares do manifesto, hashes reais das quatro configurações, backup, dois arquivos preexistentes e Bun 1.4.2. Build após sincronização e smoke direto do destino passaram. READs liberados antes deste recibo.
+
+G.PF: completed, HEAVY GO. G.TEST: in_progress, executar build, typecheck dual, cobertura completa e smoke concorrente no destino após sincronizar este recibo. G.QA: pending. Sem writers de produto; root é o único writer de evidências e integrador Git. A coleta auxiliar lê somente o plano, metadados Git e arquivos protegidos. Os checkpoints anteriores preservam a cronologia e não substituem este estado atual.
