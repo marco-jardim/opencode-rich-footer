@@ -43,6 +43,7 @@ export interface FooterAction {
 export type FooterStatus = "idle" | "running" | "retry" | undefined
 export interface FooterSource {
   key: Read<string>
+  active: Read<boolean>
   session: Read<FooterSession | undefined>
   messages: Read<readonly FooterMessage[]>
   status: Read<FooterStatus>

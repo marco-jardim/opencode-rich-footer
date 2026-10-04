@@ -38,7 +38,7 @@ export function Footer(props: { source: FooterSource }) {
   createEffect(() => {
     const source = props.source
     const key = source.key()
-    const active = child()
+    const active = source.active()
     const status = source.status()
     const last = metrics().last
     if (previousKey !== key) {
@@ -63,6 +63,7 @@ export function Footer(props: { source: FooterSource }) {
   const wide = createMemo(() => dimensions().width >= 110)
   const narrow = createMemo(() => dimensions().width < 60)
   const navigation = createMemo(() => {
+    if (!child()) return []
     const budget = narrow() ? available() : Math.max(0, Math.floor(available() / 2))
     const perAction = Math.max(1, Math.floor((budget - 4) / 3))
     return actions.map((name) => {
@@ -72,7 +73,7 @@ export function Footer(props: { source: FooterSource }) {
       return { name, text: full.length <= perAction ? full : label, width: Math.min(perAction, full.length <= perAction ? full.length : label.length) }
     })
   })
-  const navigationWidth = createMemo(() => navigation().reduce((sum, action) => sum + action.width, 0) + 4)
+  const navigationWidth = createMemo(() => child() ? navigation().reduce((sum, action) => sum + action.width, 0) + 4 : 0)
   const titleWidth = createMemo(() => {
     const budget = wide() ? Math.min(22, Math.floor(available() / 5)) : narrow() ? available() : available() - navigationWidth() - 2
     return Math.max(0, budget)
@@ -143,7 +144,7 @@ export function Footer(props: { source: FooterSource }) {
   }
 
   return (
-    <Show when={child()}>
+    <Show when={props.source.active()}>
       <box
         width="100%"
         paddingTop={1}
@@ -165,12 +166,12 @@ export function Footer(props: { source: FooterSource }) {
               <text flexGrow={1} minWidth={0} wrapMode="none" selectable={false} fg={theme().textMuted}>{usage()}</text>
             </Show>
           </box>
-          <Show when={!narrow()}><Navigation /></Show>
+          <Show when={child() && !narrow()}><Navigation /></Show>
         </box>
         <Show when={!wide() && usage()}>
           <text wrapMode="none" selectable={false} fg={theme().textMuted}>{usage()}</text>
         </Show>
-        <Show when={narrow()}><Navigation /></Show>
+        <Show when={child() && narrow()}><Navigation /></Show>
       </box>
     </Show>
   )

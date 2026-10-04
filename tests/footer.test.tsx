@@ -21,6 +21,7 @@ function fixture() {
   const calls: string[] = []
   const source: FooterSource = {
     key, session, messages, status, totals, theme,
+    active: () => Boolean(session()),
     siblings: () => [{ id: "child", parentID: "root" }],
     contextLimit: () => 1000,
     parent: { enabled, shortcut, run: () => { calls.push(`parent:${key()}`) } },
@@ -38,13 +39,14 @@ function location(frame: string, text: string) {
   return { x: lines[y].indexOf(text), y }
 }
 
-test("root sessions render nothing and a reactive child appears", async () => {
+test("root sessions render metrics without navigation and react to child/missing sessions", async () => {
   const data = fixture()
   data.setSession({ id: "root" })
   const setup = await testRender(() => <Footer source={data.source} />, { width: 80, height: 10 })
   try {
     await setup.renderOnce()
-    expect(setup.captureCharFrame().trim()).toBe("")
+    expect(setup.captureCharFrame()).toContain("response")
+    for (const label of ["Parent", "Prev", "Next"]) expect(setup.captureCharFrame()).not.toContain(label)
     data.setSession({ id: "child", parentID: "root", agent: "build" })
     await setup.renderOnce()
     expect(setup.captureCharFrame()).toContain("Parent")
@@ -209,7 +211,7 @@ test("navigation rejection is diagnosed without an unhandled promise", async () 
   }
 })
 
-test("running/retry timer clears on session switch, idle, root and owner disposal", async () => {
+test("running/retry timer works on root and clears on session switch, idle, missing session and disposal", async () => {
   const data = fixture()
   data.setStatus("running")
   const intervals = spyOn(globalThis, "setInterval")
@@ -235,16 +237,20 @@ test("running/retry timer clears on session switch, idle, root and owner disposa
     await setup.renderOnce()
     expect(handles()).toHaveLength(beforeIdle + 1)
     const retryHandle = handles().at(-1)
+    data.setKey("root")
     data.setSession({ id: "root" })
     await setup.renderOnce()
     expect(clears.mock.calls.map(([handle]) => handle)).toContain(retryHandle)
     const beforeRoot = handles().length
     data.setStatus("running")
     await setup.renderOnce()
-    expect(handles()).toHaveLength(beforeRoot)
+    expect(handles()).toHaveLength(beforeRoot + 1)
+    data.setSession(undefined)
+    await setup.renderOnce()
+    expect(clears.mock.calls.map(([handle]) => handle)).toContain(handles().at(-1))
     data.setSession({ id: "second", parentID: "root", agent: "build" })
     await setup.renderOnce()
-    expect(handles()).toHaveLength(beforeRoot + 1)
+    expect(handles()).toHaveLength(beforeRoot + 2)
     const lastHandle = handles().at(-1)
     setup.renderer.destroy()
     expect(clears.mock.calls.map(([handle]) => handle)).toContain(lastHandle)

@@ -29,7 +29,7 @@ export function formatTokens(value: number): string {
 export function deriveMetrics(source: FooterSource): FooterMetrics {
   const session = source.session()
   const name = session?.agent || session?.title?.match(/@([\w-]+) subagent/i)?.[1]
-  const label = name ? name[0].toUpperCase() + name.slice(1) : "Subagent"
+  const label = name ? name[0].toUpperCase() + name.slice(1) : session && !session.parentID ? "Session" : "Subagent"
   const siblings = source.siblings()
   const index = siblings?.findIndex((item) => item.id === session?.id) ?? -1
   const totals = source.totals()

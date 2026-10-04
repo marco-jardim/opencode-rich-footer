@@ -1,7 +1,10 @@
+/** @jsxImportSource @opentui/solid */
 import { describe, expect, test } from "bun:test"
 import { RGBA } from "@opentui/core"
+import { testRender } from "@opentui/solid"
 import type { AssistantMessage, Message, Model, Part, Provider, Session, SessionStatus } from "@opencode-ai/sdk/v2"
 import { createV1Source, type V1SourceApi } from "../src/adapters/v1"
+import { Footer } from "../src/footer"
 
 function session(id: string, parentID?: string): Session {
   return { id, parentID, slug: id, projectID: "project", directory: "D:/project", title: "@review subagent", version: "1", time: { created: 1000, updated: 2000 } }
@@ -91,6 +94,34 @@ function fixture() {
 }
 
 describe("v1 source", () => {
+  for (const id of ["parent", "child"]) {
+    test(`${id} renders metrics with navigation only for a child`, async () => {
+      const f = fixture()
+      f.setSession(id)
+      const setup = await testRender(() => <Footer source={f.source} />, { width: 160, height: 10 })
+      try {
+        await setup.renderOnce()
+        const frame = setup.captureCharFrame()
+        for (const metric of ["response ↑35 ↓30", "loaded $0.20", "ctx 65/1k", "cache 57%", "0s"]) expect(frame).toContain(metric)
+        expect(frame).not.toContain("t/s") // v1 does not expose a stream timestamp.
+        for (const label of ["Parent", "Prev", "Next"]) expect(frame.includes(label)).toBe(id === "child")
+        expect(f.source.active()).toBe(true)
+        if (id === "parent") {
+          expect(f.reads).toEqual([])
+          for (const action of [f.source.parent, f.source.previous, f.source.next]) {
+            expect(action.enabled()).toBe(false)
+            action.run()
+          }
+          expect(f.dispatches).toEqual([])
+        }
+        f.controller.abort()
+        expect(f.source.active()).toBe(false)
+      } finally {
+        setup.renderer.destroy()
+      }
+    })
+  }
+
   test("preserves reasoning-only usage, valid zeroes, model identity and loaded scope", () => {
     const f = fixture()
     expect(f.source.messages()).toEqual([{
@@ -154,12 +185,14 @@ describe("v1 source", () => {
     f.source.next.run()
     expect(f.dispatches).toEqual(["child:session.parent", "child:session.child.previous", "other:session.child.next"])
     f.setSession("parent")
+    expect(f.source.active()).toBe(true)
     expect(f.source.parent.enabled()).toBe(false)
     expect(f.source.previous.enabled()).toBe(false)
     expect(f.source.next.enabled()).toBe(false)
     f.source.parent.run()
     f.setSession("child")
     f.controller.abort()
+    expect(f.source.active()).toBe(false)
     expect(f.source.next.enabled()).toBe(false)
     f.source.next.run()
     expect(f.dispatches).toHaveLength(3)

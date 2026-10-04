@@ -1,6 +1,6 @@
 # opencode-rich-footer
 
-Footer pessoal para os meus forks locais do OpenCode. Aparece apenas em sessões de subagentes, identificadas por `parentID`, e mostra métricas disponíveis e navegação para pai e irmãos. Em uma sessão principal, o componente fica vazio.
+Footer pessoal para os meus forks locais do OpenCode. Mostra as métricas disponíveis tanto na sessão principal quanto em sessões de subagentes. A navegação para pai e irmãos aparece apenas em sessões de subagentes, identificadas por `parentID`; na sessão principal, não há controles nem comandos de paleta de navegação do plugin.
 
 O plugin usa os tokens de tema do host, adapta o layout à largura do terminal e encurta ou oculta campos quando falta espaço. `Parent`, `Prev` e `Next` permanecem acessíveis por mouse; os controles não tomam o foco do editor.
 
@@ -112,13 +112,13 @@ Dados ausentes, negativos ou não finitos são omitidos. Zero válido é preserv
 
 Em v1, os controles despacham os comandos nativos `session.parent`, `session.child.previous` e `session.child.next`. Os atalhos exibidos vêm dos bindings atuais do host. Se `children()` não estiver disponível, a posição é omitida e a navegação continua usando os comandos nativos.
 
-Em v2, o plugin registra `opencode-rich-footer.parent`, `opencode-rich-footer.previous` e `opencode-rich-footer.next` na paleta, com `bind: false`: não há teclas padrão próprias. Use a paleta ou os controles por mouse. O schema do host não aceita chaves arbitrárias de plugins na configuração de atalhos; não adicione esses IDs ao JSON por conta própria. `Alt+Shift+Left/Right` continua pertencendo à seleção de palavras do editor.
+Em v2, apenas em sessões com `parentID`, o plugin registra `opencode-rich-footer.parent`, `opencode-rich-footer.previous` e `opencode-rich-footer.next` na paleta, com `bind: false`: não há teclas padrão próprias. Use a paleta ou os controles por mouse. O schema do host não aceita chaves arbitrárias de plugins na configuração de atalhos; não adicione esses IDs ao JSON por conta própria. `Alt+Shift+Left/Right` continua pertencendo à seleção de palavras do editor.
 
 Irmãos v2 são obtidos com paginação pelo mesmo pai, sem filtrar pelo diretório: filhos em outros diretórios também participam da posição e navegação. Descendentes de irmãos e sessões de outros pais ficam fora. Uma lista incompleta ou com falha não habilita navegação para um alvo presumido. Os handlers verificam o alvo atual no momento da ação e deixam de funcionar ao descartar o componente.
 
 ## Diagnóstico e recuperação
 
-- Footer ausente: entre em uma sessão que tenha `parentID`, confirme o checkout validado, o arquivo de configuração da geração e o build compilado. Em v1, a integração usa `session_footer`; em v2, `session.composer.top`.
+- Footer ausente: abra uma sessão principal ou de subagente e confirme o checkout validado, o arquivo de configuração da geração e o build compilado. Em v1, a integração usa `session_footer`; em v2, `session.composer.top`. A ausência de `Parent`, `Prev` e `Next` é esperada na sessão principal; as métricas disponíveis continuam visíveis.
 - Posição ausente em v1: confirme a disponibilidade de `children()`. O restante do footer pode funcionar sem esse accessor.
 - Métrica ausente: confirme que há uso válido após a compactação e espaço suficiente. TPS não é fornecido pelo adaptador v1; custo desconhecido não é convertido em zero.
 - Falha HTTP em v2: mensagens com prefixo `[opencode-rich-footer]` identificam erros de sincronização de sessão, mensagens, irmãos ou catálogo. Corrija a conexão/servidor e faça uma nova sincronização ou remonte a sessão. Eventos relevantes de criação, mudança ou remoção de filhos também atualizam os irmãos; não há promessa de retry contínuo do catálogo pelo footer.

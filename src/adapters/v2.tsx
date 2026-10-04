@@ -111,7 +111,7 @@ export function createV2Source(context: V2Context, sessionID: Read<string>, diag
   const active = () => {
     if (sourceDisposed) return false
     const route = context.ui.router.current()
-    return route.type === "session" && route.sessionID === sessionID() && Boolean(current()?.parentID) && !deleted().has(sessionID())
+    return route.type === "session" && route.sessionID === sessionID() && Boolean(current()) && !deleted().has(sessionID())
   }
   const target = (name: keyof typeof commands) => {
     const session = current()
@@ -139,7 +139,6 @@ export function createV2Source(context: V2Context, sessionID: Read<string>, diag
     setChildren(undefined)
     setChildrenKey(undefined)
     setDeleted(new Set<string>())
-    if (!parentID) return
     let disposed = false
     let refreshing = false
     let pendingRefresh = false
@@ -189,11 +188,17 @@ export function createV2Source(context: V2Context, sessionID: Read<string>, diag
     }
     sync("session sync", () => context.data.session.sync(id))
     sync("messages sync", () => context.data.session.message.sync(id))
-    sync("parent sync", () => context.data.session.sync(parentID))
     sync("model catalogue sync", () => context.data.location.model.sync(ref))
-    void refresh()
+    if (parentID) {
+      sync("parent sync", () => context.data.session.sync(parentID))
+      void refresh()
+    }
     const off = context.data.listen(({ details }) => {
       if (!valid()) return
+      if (!parentID) {
+        if (details.type === "session.deleted" && details.data.sessionID === id) setDeleted((value) => new Set([...value, id]))
+        return
+      }
       if (details.type === "session.deleted") {
         const deletedID = details.data.sessionID
         const known = deletedID === id || deletedID === parentID || children()?.some((entry) => entry.id === deletedID) || context.data.session.get(deletedID)?.parentID === parentID
@@ -206,19 +211,21 @@ export function createV2Source(context: V2Context, sessionID: Read<string>, diag
       if (details.type === "session.created" && details.data.parentID === parentID) void refresh()
       if (details.type === "session.moved" && (refreshing || children()?.some((entry) => entry.id === details.data.sessionID) || context.data.session.get(details.data.sessionID)?.parentID === parentID)) void refresh()
     })
+    onCleanup(() => { disposed = true; off() })
+    if (!parentID) return
     context.keymap.layer(() => ({
-      enabled: active,
+      enabled: () => active() && Boolean(current()?.parentID),
       commands: [
         { id: commands.parent, title: "Open parent session", bind: false, palette: true, enabled: parent.enabled, run: parent.run },
         { id: commands.previous, title: "Previous sibling session", bind: false, palette: true, enabled: previous.enabled, run: previous.run },
         { id: commands.next, title: "Next sibling session", bind: false, palette: true, enabled: next.enabled, run: next.run },
       ],
     }))
-    onCleanup(() => { disposed = true; off() })
   }))
 
   return {
     key,
+    active,
     session: () => { const session = current(); return session && v2Session(session) },
     messages: () => v2Messages(context.data.session.message.list(sessionID())),
     status: () => context.data.session.status(sessionID()),
