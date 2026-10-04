@@ -12,6 +12,7 @@ function source(overrides: Partial<FooterSource> = {}): FooterSource {
   const action = { enabled: () => false, shortcut: () => undefined, run() {} }
   return {
     key: () => "location/child", session: () => ({ id: "child", parentID: "root", title: "@test-agent subagent" }),
+    active: () => true,
     messages: () => [assistant()], status: () => "idle", totals: () => ({ tokens, cost: 0, scope: "session" }),
     siblings: () => [{ id: "child", parentID: "root" }], contextLimit: () => 200,
     theme: () => ({ text: "#ffffff", textMuted: "#999999", border: "#555555", backgroundPanel: "#000000", backgroundElement: "#111111" }),
@@ -63,6 +64,7 @@ describe("metrics", () => {
     expect(deriveMetrics(source({ messages: () => [] })).cachePercent).toBe(after.cachePercent)
   })
   test("labels and position require real session membership", () => {
+    expect(deriveMetrics(source({ session: () => ({ id: "root" }) })).label).toBe("Session")
     expect(deriveMetrics(source({ session: () => ({ id: "absent", agent: "Explorer" }) })).label).toBe("Explorer")
     expect(deriveMetrics(source({ session: () => ({ id: "absent", title: "other" }) })).position).toBeUndefined()
     expect(deriveMetrics(source({ messages: () => [assistant({ model: undefined })] })).context?.limit).toBeUndefined()

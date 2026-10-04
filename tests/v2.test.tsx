@@ -1,9 +1,12 @@
+/** @jsxImportSource @opentui/solid */
 import { describe, expect, test } from "bun:test"
 import { RGBA } from "@opentui/core"
+import { testRender } from "@opentui/solid"
 import { createRoot, createSignal, onCleanup } from "solid-js"
 import type { SessionInfo, SessionMessageInfo, SessionsResponse, ModelInfo } from "@opencode/client"
 import { createV2Source, v2Messages, v2Tokens, type V2Context } from "../src/adapters/v2"
 import { directSiblings, siblingTarget } from "../src/navigation"
+import { Footer } from "../src/footer"
 
 const usage = { input: 100, output: 50, reasoning: 10, cache: { read: 20, write: 5 } }
 function session(id: string, parentID?: string, created = 1): SessionInfo {
@@ -132,6 +135,33 @@ describe("direct sibling navigation", () => {
 })
 
 describe("v2 source lifecycle", () => {
+  for (const id of ["parent", "a"]) {
+    test(`${id} renders metrics with navigation and palette only for a child`, async () => {
+      const f = fixture()
+      f.setID(id)
+      f.setMessages([{ ...assistant(), tokens: usage }])
+      f.setModels([model()])
+      f.context.data.session.status = () => "running"
+      const setup = await testRender(() => <Footer source={f.source} />, { width: 160, height: 10 })
+      try {
+        await flush()
+        await setup.renderOnce()
+        const frame = setup.captureCharFrame()
+        for (const metric of ["response ↑125 ↓60", "session $2.00", "ctx 185/64k", "cache 16%", "~6000t/s", "0s"]) expect(frame).toContain(metric)
+        for (const label of ["Parent", "Prev", "Next"]) expect(frame.includes(label)).toBe(id === "a")
+        expect(f.layers.size).toBe(id === "a" ? 1 : 0)
+        expect(f.source.active()).toBe(true)
+        f.emit(deletedEvent(id))
+        await setup.renderOnce()
+        expect(f.source.active()).toBe(false)
+        expect(setup.captureCharFrame().trim()).toBe("")
+      } finally {
+        setup.renderer.destroy()
+        f.dispose()
+      }
+    })
+  }
+
   test("authoritative totals stay independent of loaded/paginated messages", async () => {
     const f = fixture()
     await flush()
@@ -142,15 +172,39 @@ describe("v2 source lifecycle", () => {
     expect(f.source.liveTokenDeltas).toBe(false)
     f.dispose()
   })
-  test("root performs no subagent sync, listener or command registration", async () => {
+  test("root syncs metrics and observes deletion without subagent sync or commands", async () => {
     const f = fixture([session("root")])
     await flush()
-    expect(f.calls).toEqual([])
-    expect(f.listeners.size).toBe(0)
+    expect(f.calls).toEqual(["session:root", "messages:root", "models:D:/project"])
+    expect(f.listeners.size).toBe(1)
     expect(f.layers.size).toBe(0)
     expect(f.source.siblings()).toBeUndefined()
     expect(f.source.parent.enabled()).toBe(false)
+    expect(f.source.previous.enabled()).toBe(false)
+    expect(f.source.next.enabled()).toBe(false)
+    expect(f.source.active()).toBe(true)
+    f.emit(createdEvent("child", "root"))
+    f.emit(movedEvent("root"))
+    await flush()
+    expect(f.calls).toHaveLength(3)
+    f.emit(deletedEvent("root"))
+    expect(f.source.active()).toBe(false)
     f.dispose()
+    expect(f.listeners.size).toBe(0)
+  })
+  test("footer activation requires a matching session route and existing session", async () => {
+    const f = fixture([session("root")])
+    await flush()
+    f.context.ui.router.current = () => ({ type: "home" })
+    expect(f.source.active()).toBe(false)
+    f.context.ui.router.current = () => ({ type: "session", sessionID: "other" })
+    expect(f.source.active()).toBe(false)
+    f.context.ui.router.current = () => ({ type: "session", sessionID: "root" })
+    expect(f.source.active()).toBe(true)
+    f.setSessions([])
+    expect(f.source.active()).toBe(false)
+    f.dispose()
+    expect(f.source.active()).toBe(false)
   })
   test("model resolution uses provider and public model ID, and preserves unknown limits", async () => {
     const f = fixture()

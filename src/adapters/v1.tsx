@@ -76,7 +76,9 @@ export function createV1Source(api: V1SourceApi, sessionID: () => string): Foote
     const item = api.state.session.get(sessionID())
     return item ? sessionView(item) : undefined
   }
-  const enabled = () => !api.lifecycle.signal.aborted && Boolean(session()?.parentID)
+  // The host owns the session_footer route and its lifetime.
+  const active = () => !api.lifecycle.signal.aborted && Boolean(session())
+  const enabled = () => active() && Boolean(session()?.parentID)
 
   function action(command: string): FooterAction {
     return {
@@ -102,6 +104,7 @@ export function createV1Source(api: V1SourceApi, sessionID: () => string): Foote
 
   return {
     key: () => JSON.stringify([connectionID(api.client), api.state.path.directory, api.state.path.worktree, sessionID()]),
+    active,
     session,
     messages() {
       const result: FooterMessage[] = []

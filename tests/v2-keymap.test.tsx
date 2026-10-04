@@ -51,11 +51,11 @@ function session(id: string, created: number, parentID?: string): SessionInfo {
   }
 }
 
-async function setup(config = runtimeModule.createTuiResolvedConfig()) {
+async function setup(config = runtimeModule.createTuiResolvedConfig(), sessionID = "child-b") {
   const sessions = [session("parent", 0), session("child-a", 1, "parent"), session("child-b", 2, "parent"), session("child-c", 3, "parent")]
   const [providerVisible, setProviderVisible] = createSignal(false)
   const [footerVisible, setFooterVisible] = createSignal(false)
-  const [route, setRoute] = createSignal<ReturnType<Context["ui"]["router"]["current"]>>({ type: "session", sessionID: "child-b" })
+  const [route, setRoute] = createSignal<ReturnType<Context["ui"]["router"]["current"]>>({ type: "session", sessionID })
   const navigated: string[] = []
   const dataListeners = new Set<Parameters<V2Context["data"]["listen"]>[0]>()
   const diagnostics: string[] = []
@@ -105,7 +105,7 @@ async function setup(config = runtimeModule.createTuiResolvedConfig()) {
         border: { base: RGBA.fromHex("#444444") },
       },
     }
-    source = createV2Source(context, () => "child-b", (message) => diagnostics.push(message))
+    source = createV2Source(context, () => sessionID, (message) => diagnostics.push(message))
     return <Footer source={source} />
   }
 
@@ -128,7 +128,7 @@ async function setup(config = runtimeModule.createTuiResolvedConfig()) {
     commands() { if (!commands) throw new Error("Keymap was not mounted"); return commands() },
     shortcuts(id: string) { if (!shortcuts) throw new Error("Keymap was not mounted"); return shortcuts(id) },
     dispatch(id: string) { if (!dispatch) throw new Error("Keymap was not mounted"); dispatch(id) },
-    restoreRoute() { setRoute({ type: "session", sessionID: "child-b" }) },
+    restoreRoute() { setRoute({ type: "session", sessionID }) },
     listenerCounts() {
       return {
         publicKeys: app.renderer.keyInput.listenerCount("keypress"),
@@ -140,6 +140,24 @@ async function setup(config = runtimeModule.createTuiResolvedConfig()) {
     },
   }
 }
+
+test("v2 root renders metrics without navigation commands in the real host palette", async () => {
+  const fixture = await setup(undefined, "parent")
+  try {
+    fixture.setProviderVisible(true)
+    fixture.setFooterVisible(true)
+    await fixture.app.renderOnce()
+    expect(fixture.app.captureCharFrame()).toContain("session $0.00")
+    for (const label of ["Parent", "Prev", "Next"]) expect(fixture.app.captureCharFrame()).not.toContain(label)
+    expect(fixture.commands().filter((entry) => commandIDs.some((id) => id === entry.id))).toEqual([])
+    for (const id of commandIDs) fixture.dispatch(id)
+    expect(fixture.navigated).toEqual([])
+    expect(fixture.app.renderer.currentFocusedEditor).toBe(fixture.editor())
+    expect(fixture.diagnostics).toEqual([])
+  } finally {
+    fixture.app.renderer.destroy()
+  }
+})
 
 test("v2 footer preserves host word selection with alt+shift+left/right in the focused composer textarea", async () => {
   const fixture = await setup()
