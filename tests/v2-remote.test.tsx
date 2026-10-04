@@ -35,7 +35,7 @@ function locationKey(ref: LocationRef): string {
   return JSON.stringify([ref.directory, ref.workspaceID])
 }
 
-async function setup(failInitially = false) {
+async function setup(failInitially = false, latency = 0) {
   const parent = session("parent", "D:/remote-parent", 0)
   const siblings = [session("a", "D:/remote-a", 1, parent.id), session("b", "D:/remote-b", 2, parent.id), session("c", "D:/remote-c", 3, parent.id)]
   const local = { directory: "D:/local-client" }
@@ -44,7 +44,8 @@ async function setup(failInitially = false) {
   const failures = { children: failInitially, models: failInitially }
   const server = Bun.serve({
     hostname: "127.0.0.1", port: 0,
-    fetch(request) {
+    async fetch(request) {
+      if (latency) await Bun.sleep(latency)
       const url = new URL(request.url)
       const entry = { method: request.method, url, status: 200 }
       requests.push(entry)
@@ -133,6 +134,15 @@ async function setup(failInitially = false) {
   return {
     app, server, client, requests, failures, context, remote, local, listeners, layers, diagnostics, destinations, setStatus,
     source() { if (!source) throw new Error("Remote footer did not mount"); return source },
+    async waitForData(predicate: () => boolean) {
+      // Renderer waitFor stops as soon as rendering is idle, even while a real
+      // HTTP response is pending. Yield to I/O independently of frame scheduling.
+      const deadline = performance.now() + 5000
+      while (!predicate()) {
+        if (performance.now() >= deadline) throw new Error(`Timed out waiting for HTTP data: ${JSON.stringify({ requests: requests.map(({ url, status }) => ({ url: url.href, status })), diagnostics })}`)
+        await Bun.sleep(5)
+      }
+    },
     emitRefresh() {
       for (const listener of listeners) listener({ details: {
         id: "created-c", type: "session.created", created: 1,
@@ -163,10 +173,10 @@ async function setup(failInitially = false) {
   }
 }
 
-test("real v2 HTTP client paginates cross-directory siblings and renders the remote model limit", async () => {
-  const fixture = await setup()
+test.each([0, 100])("real v2 HTTP client paginates cross-directory siblings and renders the remote model limit (%i ms HTTP latency)", async (latency) => {
+  const fixture = await setup(false, latency)
   try {
-    await fixture.app.waitFor(() => fixture.source().siblings()?.length === 3 && fixture.source().contextLimit({ providerID: "provider", modelID: "model" }) === 64000)
+    await fixture.waitForData(() => fixture.source().siblings()?.length === 3 && fixture.source().contextLimit({ providerID: "provider", modelID: "model" }) === 64000)
     await fixture.app.renderOnce()
     const childrenRequests = fixture.requests.filter((entry) => entry.url.pathname === "/api/session")
     expect(childrenRequests).toHaveLength(2)
@@ -199,10 +209,10 @@ test("real v2 HTTP client paginates cross-directory siblings and renders the rem
   }
 })
 
-test("real HTTP failures are diagnosed, preserve unknown state and recover from a fresh sync", async () => {
-  const fixture = await setup(true)
+test.each([0, 100])("real HTTP failures are diagnosed, preserve unknown state and recover from a fresh sync (%i ms HTTP latency)", async (latency) => {
+  const fixture = await setup(true, latency)
   try {
-    await fixture.app.waitFor(() => fixture.diagnostics.some((entry) => entry.includes("children sync")) && fixture.diagnostics.some((entry) => entry.includes("model catalogue sync")))
+    await fixture.waitForData(() => fixture.diagnostics.some((entry) => entry.includes("children sync")) && fixture.diagnostics.some((entry) => entry.includes("model catalogue sync")))
     await fixture.app.renderOnce()
     expect(fixture.requests.filter((entry) => entry.status >= 500).map((entry) => entry.status).sort()).toEqual([500, 503])
     expect(fixture.source().siblings()).toBeUndefined()
@@ -215,7 +225,7 @@ test("real HTTP failures are diagnosed, preserve unknown state and recover from 
     fixture.failures.models = false
     fixture.emitRefresh()
     await fixture.context.data.location.model.sync(fixture.remote)
-    await fixture.app.waitFor(() => fixture.source().siblings()?.length === 3)
+    await fixture.waitForData(() => fixture.source().siblings()?.length === 3)
     await fixture.app.renderOnce()
     expect(fixture.app.captureCharFrame()).toContain("ctx 3k/64k 5%")
     expect(fixture.source().next.enabled()).toBe(true)
