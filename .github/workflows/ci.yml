@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dual-host:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out plugin
+        uses: actions/checkout@v4
+
+      # Build only visits src/, typecheck includes src/tests/scripts, and the
+      # test runner selects tests/ explicitly, so hosts/ is not discovered.
+      - name: Check out v1 host with session_footer support
+        uses: actions/checkout@v4
+        with:
+          repository: marco-jardim/opencode
+          ref: 8b1aace9ee8478c79474d7840083a1cbc9125013
+          path: hosts/v1
+          fetch-depth: 1
+
+      - name: Check out v2 host
+        uses: actions/checkout@v4
+        with:
+          repository: anomalyco/opencode
+          ref: 74dbc509d74df46a2523676dd4068225c4f0c9b0
+          path: hosts/v2
+          fetch-depth: 1
+
+      - name: Set up Bun for v1 host
+        id: bun-v1
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+
+      - name: Install separate Bun for plugin and v2 and export host paths
+        env:
+          BUN_V1: ${{ steps.bun-v1.outputs.bun-path }}
+        run: |
+          # setup-bun uses a shared install path; do not overwrite v1's binary.
+          $archive = Join-Path $env:RUNNER_TEMP "bun-v1.4.2.zip"
+          $directory = Join-Path $env:RUNNER_TEMP "bun-v1.4.2"
+          Invoke-WebRequest -Uri "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-windows-x64.zip" -OutFile $archive
+          Expand-Archive -Path $archive -DestinationPath $directory
+          $bunV2 = Join-Path $directory "bun-windows-x64/bun.exe"
+          $v1Version = & $env:BUN_V1 --version
+          if ($LASTEXITCODE -ne 0 -or $v1Version -ne "1.3.14") { throw "Unexpected v1 Bun: $v1Version" }
+          $v2Version = & $bunV2 --version
+          if ($LASTEXITCODE -ne 0 -or $v2Version -ne "1.4.2") { throw "Unexpected v2 Bun: $v2Version" }
+          "RICH_FOOTER_V1_HOST=$(Join-Path $env:GITHUB_WORKSPACE 'hosts/v1')" >> $env:GITHUB_ENV
+          "RICH_FOOTER_V1_BUN=$env:BUN_V1" >> $env:GITHUB_ENV
+          "RICH_FOOTER_V2_HOST=$(Join-Path $env:GITHUB_WORKSPACE 'hosts/v2')" >> $env:GITHUB_ENV
+          "RICH_FOOTER_V2_BUN=$bunV2" >> $env:GITHUB_ENV
+          # The plugin's v2 lockfile requires Bun 1.4; host v1 keeps its own Bun.
+          Split-Path $bunV2 >> $env:GITHUB_PATH
+
+      - name: Install v1 host dependencies
+        working-directory: hosts/v1
+        run: |
+          $env:PATH = "$(Split-Path $env:RICH_FOOTER_V1_BUN);$env:PATH"
+          & $env:RICH_FOOTER_V1_BUN install --frozen-lockfile
+
+      - name: Install v2 host dependencies
+        working-directory: hosts/v2
+        run: |
+          # Lifecycle scripts must also resolve the v2 Bun via PATH.
+          $env:PATH = "$(Split-Path $env:RICH_FOOTER_V2_BUN);$env:PATH"
+          & $env:RICH_FOOTER_V2_BUN install --frozen-lockfile
+
+      - name: Install plugin dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build plugin
+        run: bun scripts/build.ts
+
+      - name: Typecheck against both hosts
+        run: bun scripts/typecheck.ts
+
+      - name: Test against both hosts
+        run: bun scripts/test.ts
