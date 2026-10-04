@@ -1,0 +1,27 @@
+{
+  "commit": "943a3347b2c623d597fae531a1d24a52d13c6990",
+  "receipt": "C:\\Users\\Marquinho\\.config\\opencode\\rich-footer-backup-20261001T002712Z\\manifest.json",
+  "changed": 2,
+  "idempotentSecondApply": true,
+  "serverOnlyIntendedEntryRemoved": true,
+  "bytesOutsideServerPluginArrayUnchanged": true,
+  "otherPluginsAndOptionsPreserved": true,
+  "v1ConfigurationByteExact": true,
+  "kvByteExact": true,
+  "v2SchemaValid": true,
+  "v2PreferencesEqualRealMigrator": true,
+  "v2EnabledFooterCount": 1,
+  "originalV2Absent": true,
+  "hashes": {
+    "serverBefore": "67ADCD7539BA19762A172DF13FC3B30D58E54CFDB38291C3618258D1EB260EAE",
+    "serverAfter": "0FF7EAF87DA795E4FB0D837E512CD19F3B4850EA23DB640B657E29FA1DB2DF57",
+    "tui": "41953C11E6D4EFCCE842BE2756B8C22032FDE292ABB0FC54F2C81EF242BCD2FE",
+    "kv": "15CBF1DBAB4D3C511585CA252D31E60224A014322C071F5F084E4112E7F4CDC3",
+    "cli": "5927E0198E34C8F5530DB2285B46C3B224DE102D90467816AEA647959D0264E4"
+  },
+  "v2PreferenceKeys": [
+    "diffs",
+    "session",
+    "animations"
+  ]
+}

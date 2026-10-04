@@ -1,0 +1,350 @@
+{
+  "snapshot": "59b29fc4260a1824d7cec5b90c24f366b5eb45b4",
+  "checkedUtc": "2026-10-01T00:39:34.1711107Z",
+  "pairs": [
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\.gitignore",
+      "destination": "D:\\git\\opencode-rich-footer\\.gitignore",
+      "originSHA256": "EEA27FB2E318DA8C65C9EB73099B9D7E8114944AA542082194AA73BE689645B4",
+      "destinationSHA256": "EEA27FB2E318DA8C65C9EB73099B9D7E8114944AA542082194AA73BE689645B4",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\LICENSE",
+      "destination": "D:\\git\\opencode-rich-footer\\LICENSE",
+      "originSHA256": "9D16A3739EF587F2D8AA3B2727D8C41A1EA31D7903FFEE1F4DB26C9E94F00164",
+      "destinationSHA256": "9D16A3739EF587F2D8AA3B2727D8C41A1EA31D7903FFEE1F4DB26C9E94F00164",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\LICENSE.md",
+      "destination": "D:\\git\\opencode-rich-footer\\LICENSE.md",
+      "originSHA256": "B6067085BDBD6E8BA8D05C159C7FA823BF0A933B6863DC7A6D8C6BB24E44E114",
+      "destinationSHA256": "B6067085BDBD6E8BA8D05C159C7FA823BF0A933B6863DC7A6D8C6BB24E44E114",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\README.md",
+      "destination": "D:\\git\\opencode-rich-footer\\README.md",
+      "originSHA256": "8E3176DD13C2CC99987B6FABDF2A55551D0B4CBC25749B9860EE0BC32C20C7CB",
+      "destinationSHA256": "8E3176DD13C2CC99987B6FABDF2A55551D0B4CBC25749B9860EE0BC32C20C7CB",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\bun.lock",
+      "destination": "D:\\git\\opencode-rich-footer\\bun.lock",
+      "originSHA256": "CEA759418CAEAD8EADD120C912383FD36E58FF8FF763A95C6DD2636A7EFA1A81",
+      "destinationSHA256": "CEA759418CAEAD8EADD120C912383FD36E58FF8FF763A95C6DD2636A7EFA1A81",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\docs\\plans\\2026-09-30-opencode-v1-v2-compatibility.md",
+      "destination": "D:\\git\\opencode-rich-footer\\docs\\plans\\2026-09-30-opencode-v1-v2-compatibility.md",
+      "originSHA256": "855D3B2D6D05996C9910016EFEFE6FA9C08023558F5F092795D400F1EC2A1F6C",
+      "destinationSHA256": "855D3B2D6D05996C9910016EFEFE6FA9C08023558F5F092795D400F1EC2A1F6C",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\package.json",
+      "destination": "D:\\git\\opencode-rich-footer\\package.json",
+      "originSHA256": "27B58CA5B4C390EA650EE7F2CBC240E880463375D95321B8DC5CFB0C2A35CA61",
+      "destinationSHA256": "27B58CA5B4C390EA650EE7F2CBC240E880463375D95321B8DC5CFB0C2A35CA61",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\build.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\build.ts",
+      "originSHA256": "62CEAE0BA5B02B5AAF677551CCEED7A575FA2184D7608C2B6000A0A79705E783",
+      "destinationSHA256": "62CEAE0BA5B02B5AAF677551CCEED7A575FA2184D7608C2B6000A0A79705E783",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\configure-local.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\configure-local.ts",
+      "originSHA256": "8A545E8701A97D445764A8A7FDCC1F5647210A867B417DF3626D6D14EDF1301B",
+      "destinationSHA256": "8A545E8701A97D445764A8A7FDCC1F5647210A867B417DF3626D6D14EDF1301B",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\hosts.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\hosts.ts",
+      "originSHA256": "163C4EAADDED86B8B6464D45ED5C9C8E577DFEB8D43FE6966DF66C6B2AD5DC8C",
+      "destinationSHA256": "163C4EAADDED86B8B6464D45ED5C9C8E577DFEB8D43FE6966DF66C6B2AD5DC8C",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\installed-smoke.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\installed-smoke.ts",
+      "originSHA256": "A6E92E9CC058EBF952A81102FC90DE68417B59739C83A4B1D98B8897D0E24B73",
+      "destinationSHA256": "A6E92E9CC058EBF952A81102FC90DE68417B59739C83A4B1D98B8897D0E24B73",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\local-config.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\local-config.ts",
+      "originSHA256": "FD4AB5D0EA88316DFB2958FF7CEE687CD68055D1EF8EFA0C2ACFF41612C4E116",
+      "destinationSHA256": "FD4AB5D0EA88316DFB2958FF7CEE687CD68055D1EF8EFA0C2ACFF41612C4E116",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\sandbox.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\sandbox.ts",
+      "originSHA256": "729007556FD193E8827EDB937F4AEEEAF5F3A161D81A6CEDAA2261032424D5F6",
+      "destinationSHA256": "729007556FD193E8827EDB937F4AEEEAF5F3A161D81A6CEDAA2261032424D5F6",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\test.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\test.ts",
+      "originSHA256": "BA41E9C389FB4F3A1F0959C4848FD5B50853C9F2D89B7FDFDFDFC9177CAFEA17",
+      "destinationSHA256": "BA41E9C389FB4F3A1F0959C4848FD5B50853C9F2D89B7FDFDFDFC9177CAFEA17",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\scripts\\typecheck.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\scripts\\typecheck.ts",
+      "originSHA256": "480E50B3378B382BC032E5606A1297A750C20A64D0651A9648C26F4DBCC73157",
+      "destinationSHA256": "480E50B3378B382BC032E5606A1297A750C20A64D0651A9648C26F4DBCC73157",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\adapters\\v1.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\adapters\\v1.tsx",
+      "originSHA256": "9A864B412016ABA1A2F677E96AB403E1FCE5017405C6AE29E5F4A43AC5B07D90",
+      "destinationSHA256": "9A864B412016ABA1A2F677E96AB403E1FCE5017405C6AE29E5F4A43AC5B07D90",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\adapters\\v2.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\adapters\\v2.tsx",
+      "originSHA256": "067B42CFF52DE60AAB8E1D934D496CAE0E14CB39858AEABD73BE4EE76048D7FE",
+      "destinationSHA256": "067B42CFF52DE60AAB8E1D934D496CAE0E14CB39858AEABD73BE4EE76048D7FE",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\contracts.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\contracts.ts",
+      "originSHA256": "EBD18704A46CD40392B59FDCD35D80115079D0C05C4F9F270F25C304A28FFDFB",
+      "destinationSHA256": "EBD18704A46CD40392B59FDCD35D80115079D0C05C4F9F270F25C304A28FFDFB",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\footer.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\footer.tsx",
+      "originSHA256": "34E3B5B3AFCE0E1C123EDDC06E2B53C2ABE23A2E08B390F6CF720BD07CEC11ED",
+      "destinationSHA256": "34E3B5B3AFCE0E1C123EDDC06E2B53C2ABE23A2E08B390F6CF720BD07CEC11ED",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\index.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\index.tsx",
+      "originSHA256": "CEE6DE3B9DDA3DF44C79D1018955CD9E296D2DC064FD9B0B19BA4047417901B8",
+      "destinationSHA256": "CEE6DE3B9DDA3DF44C79D1018955CD9E296D2DC064FD9B0B19BA4047417901B8",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\metrics.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\metrics.ts",
+      "originSHA256": "87F3FD650CF0E75861F05559DF80C54454937E089EC569F9FCC316365B9E24D5",
+      "destinationSHA256": "87F3FD650CF0E75861F05559DF80C54454937E089EC569F9FCC316365B9E24D5",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\navigation.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\navigation.ts",
+      "originSHA256": "0D6407DAC1E35E6501B2CF20F784F8D3EE34A5E57094E9BE8B5886EBE28C58F9",
+      "destinationSHA256": "0D6407DAC1E35E6501B2CF20F784F8D3EE34A5E57094E9BE8B5886EBE28C58F9",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\timing.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\timing.ts",
+      "originSHA256": "CEAF2B803212AAD9C2B77D2CB2268CBB446E355F69A443D718393717E155B355",
+      "destinationSHA256": "CEAF2B803212AAD9C2B77D2CB2268CBB446E355F69A443D718393717E155B355",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\src\\tui.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\src\\tui.ts",
+      "originSHA256": "D327DB4D18DEF0F04A8E849B03A121224786D60BA1B49DC066B4472D1027D0C5",
+      "destinationSHA256": "D327DB4D18DEF0F04A8E849B03A121224786D60BA1B49DC066B4472D1027D0C5",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\core.test.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\core.test.ts",
+      "originSHA256": "2D9308AC9D18EEB353216DDF223A5A254B30BE226763150F24FDA90DAE716505",
+      "destinationSHA256": "2D9308AC9D18EEB353216DDF223A5A254B30BE226763150F24FDA90DAE716505",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\entrypoints.test.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\entrypoints.test.ts",
+      "originSHA256": "3585EE2D2A89B2827EFF0D9A64AD2309AAA9B8ECC89FD5D6EF3705A54A34869A",
+      "destinationSHA256": "3585EE2D2A89B2827EFF0D9A64AD2309AAA9B8ECC89FD5D6EF3705A54A34869A",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\footer.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\footer.test.tsx",
+      "originSHA256": "1FD3DA29736B3EF1AF0363EC0C5CEB95AD28E484D592C46A07639E8C556D6BFC",
+      "destinationSHA256": "1FD3DA29736B3EF1AF0363EC0C5CEB95AD28E484D592C46A07639E8C556D6BFC",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\local-config.test.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\local-config.test.ts",
+      "originSHA256": "3AEC5145D8DBA232A03DE69E5A89CDF59C51E8F27204BC85A8436EC5866A1940",
+      "destinationSHA256": "3AEC5145D8DBA232A03DE69E5A89CDF59C51E8F27204BC85A8436EC5866A1940",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v1-installed.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v1-installed.test.tsx",
+      "originSHA256": "D7B9F9D313FA9A56B0301DC713FD1C663E888CC52A98CDD0EF54F2870EBC9E47",
+      "destinationSHA256": "D7B9F9D313FA9A56B0301DC713FD1C663E888CC52A98CDD0EF54F2870EBC9E47",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v1-loader.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v1-loader.test.tsx",
+      "originSHA256": "A32F2D6218CB81153D19C0C2DEAD75B636674AD47D1A7C82592AA99BDCA8612E",
+      "destinationSHA256": "A32F2D6218CB81153D19C0C2DEAD75B636674AD47D1A7C82592AA99BDCA8612E",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v1.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v1.test.tsx",
+      "originSHA256": "DA90D3A2B4B08DF8427E2DBE454BDF641A03374F6345C77850761B3CD13069C0",
+      "destinationSHA256": "DA90D3A2B4B08DF8427E2DBE454BDF641A03374F6345C77850761B3CD13069C0",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2-build.test.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2-build.test.ts",
+      "originSHA256": "8F40CB7D32CF07AB2DDCE44304932588EB01E2560BCFDD1DB1313CCB9055898B",
+      "destinationSHA256": "8F40CB7D32CF07AB2DDCE44304932588EB01E2560BCFDD1DB1313CCB9055898B",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2-config.test.ts",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2-config.test.ts",
+      "originSHA256": "0C80E62AB77135BCEF8E2733FC3DA476DF887DCB3348D118312C65B35626DA44",
+      "destinationSHA256": "0C80E62AB77135BCEF8E2733FC3DA476DF887DCB3348D118312C65B35626DA44",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2-installed.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2-installed.test.tsx",
+      "originSHA256": "7DD504DE098CF3AD8708382952822D757FE460A15C6755A555A7D08547695B39",
+      "destinationSHA256": "7DD504DE098CF3AD8708382952822D757FE460A15C6755A555A7D08547695B39",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2-keymap.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2-keymap.test.tsx",
+      "originSHA256": "94433F34CD76B9A18614B5F68EF7160719F2158BD67CC76F179EA4B7AEAB6A3C",
+      "destinationSHA256": "94433F34CD76B9A18614B5F68EF7160719F2158BD67CC76F179EA4B7AEAB6A3C",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2-loader.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2-loader.test.tsx",
+      "originSHA256": "3635ED8A2D1B31A7A8EA572526128743B3584F69A88263D7901B6573721AA235",
+      "destinationSHA256": "3635ED8A2D1B31A7A8EA572526128743B3584F69A88263D7901B6573721AA235",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2-remote.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2-remote.test.tsx",
+      "originSHA256": "FD5F91B785785D7533B0BB8AE6EB7814C25D19BEDA0F3B38A38B5D2296FFD712",
+      "destinationSHA256": "FD5F91B785785D7533B0BB8AE6EB7814C25D19BEDA0F3B38A38B5D2296FFD712",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tests\\v2.test.tsx",
+      "destination": "D:\\git\\opencode-rich-footer\\tests\\v2.test.tsx",
+      "originSHA256": "52C4AF6152B0321CC5F5011D3C873EAE5A50C092EB9BBA8FAF6CBCBADCA25821",
+      "destinationSHA256": "52C4AF6152B0321CC5F5011D3C873EAE5A50C092EB9BBA8FAF6CBCBADCA25821",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tsconfig.json",
+      "destination": "D:\\git\\opencode-rich-footer\\tsconfig.json",
+      "originSHA256": "FEFB84671F8026D9409D31F28AD22B257824F06451647857A5AD04EB68E8D56E",
+      "destinationSHA256": "FEFB84671F8026D9409D31F28AD22B257824F06451647857A5AD04EB68E8D56E",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\tui.js",
+      "destination": "D:\\git\\opencode-rich-footer\\tui.js",
+      "originSHA256": "C0504420429B65204D0702121CDBAE7398E032C2DE703606E5B79495BF5F1AA0",
+      "destinationSHA256": "C0504420429B65204D0702121CDBAE7398E032C2DE703606E5B79495BF5F1AA0",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\contracts.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\contracts.js",
+      "originSHA256": "97A93A637BC8F0C87303D078BDD0B41E02AA156C54702AA5E9CF035DA6E37ACA",
+      "destinationSHA256": "97A93A637BC8F0C87303D078BDD0B41E02AA156C54702AA5E9CF035DA6E37ACA",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\footer.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\footer.js",
+      "originSHA256": "E8A3E40E390415CCF19519FC2938188929E2F8508236B7565D85294F699BC29F",
+      "destinationSHA256": "E8A3E40E390415CCF19519FC2938188929E2F8508236B7565D85294F699BC29F",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\index.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\index.js",
+      "originSHA256": "E0C16F1C7FFF2FBEE03A95326D205C28A8524C565D972522A1EE7E4303A78177",
+      "destinationSHA256": "E0C16F1C7FFF2FBEE03A95326D205C28A8524C565D972522A1EE7E4303A78177",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\metrics.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\metrics.js",
+      "originSHA256": "3F80BE3E285DB10C56E85BD9AAC11F8C7509CE6C25E1E1A66F89DCC2BE98F3E3",
+      "destinationSHA256": "3F80BE3E285DB10C56E85BD9AAC11F8C7509CE6C25E1E1A66F89DCC2BE98F3E3",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\navigation.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\navigation.js",
+      "originSHA256": "3824219FC7FFD1851B4490CC364169E90A1813BA9B1AAE9BD2E0944D8391DE1D",
+      "destinationSHA256": "3824219FC7FFD1851B4490CC364169E90A1813BA9B1AAE9BD2E0944D8391DE1D",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\timing.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\timing.js",
+      "originSHA256": "5D336ECA7B1AC814C82DF9D468EB6333072C5F14C69A0403103D60AC4F1F77C4",
+      "destinationSHA256": "5D336ECA7B1AC814C82DF9D468EB6333072C5F14C69A0403103D60AC4F1F77C4",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\tui.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\tui.js",
+      "originSHA256": "DE50E40054BE2173D42E45A0EB4A4FF997534A0C87CA695BD0DB47CE860C30D0",
+      "destinationSHA256": "DE50E40054BE2173D42E45A0EB4A4FF997534A0C87CA695BD0DB47CE860C30D0",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\adapters\\v1.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\adapters\\v1.js",
+      "originSHA256": "675909460AD55938D98E19F61130CCD9B3262021AEE8DEFF18A574055BBF3F74",
+      "destinationSHA256": "675909460AD55938D98E19F61130CCD9B3262021AEE8DEFF18A574055BBF3F74",
+      "equal": true
+    },
+    {
+      "origin": "C:\\Users\\Marquinho\\.codex\\worktrees\\6f86\\opencode-rich-footer\\dist\\adapters\\v2.js",
+      "destination": "D:\\git\\opencode-rich-footer\\dist\\adapters\\v2.js",
+      "originSHA256": "67E0466955A66ED149CD06B1C125EE3FBAA31CD1DBF682AE3820085BD2259C7D",
+      "destinationSHA256": "67E0466955A66ED149CD06B1C125EE3FBAA31CD1DBF682AE3820085BD2259C7D",
+      "equal": true
+    }
+  ],
+  "everyExecutableFileCoveragePassed": true
+}

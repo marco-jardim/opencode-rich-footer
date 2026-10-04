@@ -1,6 +1,8 @@
 /** @jsxImportSource @opentui/solid */
 import { expect, test } from "bun:test"
-import { join } from "node:path"
+import { mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join, sep } from "node:path"
 import { pathToFileURL } from "node:url"
 import type { Plugin } from "@opencode/plugin/tui"
 import type { SessionInfo } from "@opencode/client"
@@ -30,6 +32,12 @@ const host = process.env.RICH_FOOTER_HOST
 if (!host) throw new Error("RICH_FOOTER_HOST must point to the v2 host checkout")
 const keymapModule: { Keymap: HostKeymap } = await import(pathToFileURL(join(host, "packages/tui/src/context/keymap.tsx")).href)
 const runtimeModule: { createTuiResolvedConfig(): KeymapConfig } = await import(pathToFileURL(join(host, "packages/tui/test/fixture/tui-runtime.ts")).href)
+const configPath = join(host, "packages/tui/src/config/index.tsx")
+const configModule: {
+  Info: unknown
+  resolve(input: unknown, options: { terminalSuspend: boolean; environment: Readonly<Record<string, string | undefined>> }): KeymapConfig
+} = await import(pathToFileURL(configPath).href)
+const effectModule: { Schema: { decodeUnknownSync(schema: unknown): (input: unknown) => unknown } } = await import(pathToFileURL(Bun.resolveSync("effect", configPath)).href)
 const { Keymap } = keymapModule
 
 const commandIDs = ["opencode-rich-footer.parent", "opencode-rich-footer.previous", "opencode-rich-footer.next"] as const
@@ -43,7 +51,7 @@ function session(id: string, created: number, parentID?: string): SessionInfo {
   }
 }
 
-async function setup() {
+async function setup(config = runtimeModule.createTuiResolvedConfig()) {
   const sessions = [session("parent", 0), session("child-a", 1, "parent"), session("child-b", 2, "parent"), session("child-c", 3, "parent")]
   const [providerVisible, setProviderVisible] = createSignal(false)
   const [footerVisible, setFooterVisible] = createSignal(false)
@@ -105,7 +113,7 @@ async function setup() {
     <box>
       <textarea ref={(value) => { editor = value }} focused initialValue="alpha beta" width={80} height={2} />
       <Show when={providerVisible()}>
-        <Keymap.Provider config={runtimeModule.createTuiResolvedConfig()}>
+        <Keymap.Provider config={config}>
           <Probe />
           <Show when={footerVisible()}><BoundFooter /></Show>
         </Keymap.Provider>
@@ -167,6 +175,84 @@ test("v2 footer preserves host word selection with alt+shift+left/right in the f
     expect(fixture.diagnostics).toEqual([])
   } finally {
     fixture.app.renderer.destroy()
+  }
+})
+
+test("native word-selection bindings loaded from a real CLI config retain editor behavior with the footer", async () => {
+  const temporaryRoot = await realpath(tmpdir())
+  const temporary = await realpath(await mkdtemp(join(temporaryRoot, "rich-footer-keybind-")))
+  let fixture: Awaited<ReturnType<typeof setup>> | undefined
+  try {
+    const file = join(temporary, "cli.json")
+    const overrides = {
+      "input.select.word.backward": "ctrl+shift+left",
+      "input.select.word.forward": "ctrl+shift+right",
+    }
+    await writeFile(file, JSON.stringify({ $schema: "https://opencode.ai/v2/cli.json", keybinds: overrides }), "utf8")
+    // Read an isolated file, then use exactly the host's schema and resolver.
+    // No synthetic command layer replaces the configured native commands.
+    const decoded = effectModule.Schema.decodeUnknownSync(configModule.Info)(JSON.parse(await readFile(file, "utf8")))
+    expect(decoded).toMatchObject({ keybinds: overrides })
+    const config = configModule.resolve(decoded, { terminalSuspend: false, environment: {} })
+    expect(config.keybinds.get("input.select.word.backward")).toMatchObject([{ key: "ctrl+shift+left" }])
+    expect(config.keybinds.get("input.select.word.forward")).toMatchObject([{ key: "ctrl+shift+right" }])
+    const mounted = await setup(config)
+    fixture = mounted
+    mounted.setProviderVisible(true)
+    await mounted.app.renderOnce()
+    const editor = mounted.editor()
+    const selectWord = async (direction: "left" | "right") => {
+      editor.clearSelection()
+      editor.cursorOffset = direction === "left" ? editor.plainText.length : 0
+      mounted.app.mockInput.pressArrow(direction, { ctrl: true, shift: true })
+      await mounted.app.renderOnce()
+      return { text: editor.getSelectedText(), bounds: editor.getSelection(), cursor: editor.cursorOffset }
+    }
+    const beforeLeft = await selectWord("left")
+    const beforeRight = await selectWord("right")
+    expect(beforeLeft.text.length).toBeGreaterThan(0)
+    expect(beforeRight.text.length).toBeGreaterThan(0)
+    const beforeFooter = mounted.listenerCounts()
+    mounted.setFooterVisible(true)
+    await mounted.app.waitFor(() => mounted.source().previous.enabled() && mounted.source().next.enabled())
+    await mounted.app.renderOnce()
+    expect(await selectWord("left")).toEqual(beforeLeft)
+    expect(await selectWord("right")).toEqual(beforeRight)
+    expect(editor.plainText).toBe("alpha beta")
+    expect(mounted.app.renderer.currentFocusedEditor).toBe(editor)
+    expect(mounted.navigated).toEqual([])
+    expect(mounted.listenerCounts().publicKeys).toBe(beforeFooter.publicKeys)
+    expect(mounted.listenerCounts().internalKeys).toBe(beforeFooter.internalKeys)
+    for (const id of commandIDs) {
+      const command = mounted.commands().find((entry) => entry.id === id)
+      expect(command?.palette).toBe(true)
+      expect(command?.bind).toBe(false)
+      expect(mounted.shortcuts(id)).toEqual([])
+    }
+    const previous = mounted.commands().find((entry) => entry.id === commandIDs[1] && entry.palette)
+    if (!previous) throw new Error("Configured native bindings removed the footer palette command")
+    previous.run()
+    expect(mounted.navigated).toEqual(["child-a"])
+    mounted.restoreRoute()
+    await mounted.app.renderOnce()
+    const lines = mounted.app.captureCharFrame().split("\n")
+    const y = lines.findIndex((line) => line.includes("Next"))
+    if (y < 0) throw new Error("Footer next action was not rendered")
+    await mounted.app.mockMouse.click(lines[y].indexOf("Next"), y)
+    expect(mounted.navigated).toEqual(["child-a", "child-c"])
+    expect(mounted.app.renderer.currentFocusedEditor).toBe(editor)
+    expect(editor.plainText).toBe("alpha beta")
+    mounted.setFooterVisible(false)
+    await mounted.app.renderOnce()
+    expect(mounted.listenerCounts()).toEqual(beforeFooter)
+    expect(mounted.dataListeners.size).toBe(0)
+    expect(mounted.diagnostics).toEqual([])
+    expect(JSON.parse(await readFile(file, "utf8"))).toMatchObject({ keybinds: overrides })
+  } finally {
+    fixture?.app.renderer.destroy()
+    const resolved = await realpath(temporary)
+    if (!resolved.startsWith(temporaryRoot + sep)) throw new Error("Keybinding fixture escaped its temporary root")
+    await rm(resolved, { recursive: true, force: true })
   }
 })
 

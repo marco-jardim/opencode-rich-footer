@@ -1,0 +1,3 @@
+$ bun scripts/typecheck.ts
+Typecheck v1: passed
+Typecheck v2: passed
